@@ -9,10 +9,10 @@ app=Flask(__name__)
 app.secret_key = 'thisismysecretkey123456789'
 
 # Enter your database connection details below
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'himan'
-app.config['MYSQL_PASSWORD'] = 'himan'
-app.config['MYSQL_DB'] = 'flaskProject'
+app.config['MYSQL_HOST'] = ''
+app.config['MYSQL_USER'] = ''
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = ''
 
 # Intialize MySQL
 mysql = MySQL(app)
@@ -74,9 +74,25 @@ def home():
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 
-@app.route('/create_customer_screen')
+
+@app.route('/create_customer_screen', methods=['GET', 'POST'])
 def create_customer_screen():
     if 'loggedin' in session:
+        if request.method == 'POST':
+            userDetails = request.form
+            cust_ssnid = userDetails['ssnid']
+            cust_name = userDetails['custname']
+            cust_age = userDetails['age']
+            cust_addr1 = userDetails['addr']
+            cust_state = userDetails['state']
+            cust_city = userDetails['city']
+            cust_addr = cust_addr1 + " "+cust_city+" "+cust_state
+            cur = mysql.connection.cursor()
+            cur.execute(
+                'INSERT INTO Customer(ws_ssn, ws_name, ws_age, ws_adrs) VALUES(%s, %s, %s, %s)',(cust_ssnid, cust_name, cust_age, cust_addr))
+            mysql.connection.commit()
+            cur.close()
+            return "Success"
         return render_template('create_customer_screen.html', username=session['login'])
     return redirect(url_for('login'))
 
