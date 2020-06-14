@@ -10,9 +10,9 @@ app.secret_key = 'thisismysecretkey123456789'
 
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'retailbank'
+app.config['MYSQL_USER'] = 'himan'
+app.config['MYSQL_PASSWORD'] = 'himan'
+app.config['MYSQL_DB'] = 'flaskProject'
 
 # Intialize MySQL
 mysql = MySQL(app)
@@ -76,57 +76,82 @@ def home():
 
 @app.route('/create_customer_screen')
 def create_customer_screen():
-    return render_template("create_customer_screen.html")
+    if 'loggedin' in session:
+        return render_template('create_customer_screen.html', username=session['login'])
+    return redirect(url_for('login'))
 
 @app.route('/update_customer')
 def update_customer():
-    return render_template("update_customer.html")
+    if 'loggedin' in session:
+        return render_template('update_customer.html', username=session['login'])
+    return redirect(url_for('login'))
 
 @app.route('/delete_customer')
 def delete_customer():
-    return render_template("delete_customer.html")
+    if 'loggedin' in session:
+        return render_template('delete_customer.html', username=session['login'])
+    return redirect(url_for('login'))
 
 @app.route('/customer_status')
 def customer_status():
-    return render_template("customer_status.html")
+    if 'loggedin' in session:
+        return render_template('customer_status.html', username=session['login'])
+    return redirect(url_for('login'))
 
 @app.route('/create_account')
 def create_account():
-    return render_template("create_account.html")
+    if 'loggedin' in session:
+        return render_template('create_account.html', username=session['login'])
+    return redirect(url_for('login'))
 
 @app.route('/delete_account')
 def delete_account():
-    return render_template("delete_account.html")
+    if 'loggedin' in session:
+        return render_template('delete_account.html', username=session['login'])
+    return redirect(url_for('login'))
 
 @app.route('/account_status')
 def account_status():
-    return render_template("account_status.html")
+    if 'loggedin' in session:
+        return render_template('account_status.html', username=session['login'])
+    return redirect(url_for('login'))
 
 
 @app.route('/customer_search')
 def customer_search():
-    return render_template("customer_search.html")
+    if 'loggedin' in session:
+        return render_template('customer_search.html', username=session['login'])
+    return redirect(url_for('login'))
 
 @app.route('/account_search')
 def account_search():
-    return render_template("account_search.html")
+    if 'loggedin' in session:
+        return render_template('account_search.html', username=session['login'])
+    return redirect(url_for('login'))
 
 @app.route('/withdraw_amount')
 def withdraw_amount():
-    return render_template("withdraw_amount.html")
+    if 'loggedin' in session:
+        return render_template('withdraw_amount.html', username=session['login'])
+    return redirect(url_for('login'))
 
 @app.route('/transfer_money')
 def transfer_money():
-    return render_template("transfer_money.html")
+    if 'loggedin' in session:
+        return render_template('transfer_money.html', username=session['login'])
+    return redirect(url_for('login'))
 
 @app.route('/deposit_money')
 def deposit_money():
-    return render_template("deposit_money.html")
+    if 'loggedin' in session:
+        return render_template('deposit_money.html', username=session['login'])
+    return redirect(url_for('login'))
 
 @app.route('/account_statement')
 def account_statement():
-    return render_template("account_statement.html")
-
+    if 'loggedin' in session:
+        return render_template('account_statement.html', username=session['login'])
+    return redirect(url_for('login'))
 
 if __name__==("__main__"):
     app.run(debug=True)
