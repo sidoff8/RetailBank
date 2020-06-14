@@ -1,4 +1,40 @@
 {% extends "layout.html" %}
 {%block content%}
-        <h1>Create Customer Screen</h1>
+<div class="bodyForm">
+	<center>
+    	<span>Create Customer Screen</span><br><br><br>
+        <form action="" style="margin-top: .8cm;">
+  			<label for="fname" style="margin-right:4cm;">Customer SSN Id<span style="color: red;font-size: .5cm;">*</span></label>
+  			<input type="text" id="fname" name="fname"><br><br>
+  			<label for="lname" style="margin-right:4.3cm;">Customer Name<span style="color: red;font-size: .5cm;">*</span></label>
+  			<input type="text" id="lname" name="lname"><br><br>
+            <label for="fname" style="margin-right:6.6cm;">Age<span style="color: red;font-size: .5cm;">*</span></label>
+  			<input type="text" id="fname" name="fname"><br><br>
+  			<label for="lname" style="margin-right:5.8cm;">Address<span style="color: red;font-size: .5cm;">*</span></label>
+  			<input type="text" id="lname" name="lname"><br><br>
+            <label for="fname" style="margin-right:6.5cm;">State</label>
+  			<select id="cars" name="cars" style="width: 4.7cm;">
+  				<option value=""></option>
+  				<option value=""></option>
+  				<option value=""></option>
+  				<option value=""></option>
+			</select><br><br>
+  			<label for="lname" style="margin-right:6.8cm;">City</label>
+  			<select id="cars" name="cars" style="width: 4.7cm;">
+  				<option value=""></option>
+  				<option value=""></option>
+  				<option value=""></option>
+  				<option value=""></option>
+			</select><br><br>
+			<span style="color: red;font-size: .4cm;margin-right: 8cm;">(*)Fields are compulsory</span><br><br>
+  			<input type="submit" value="Submit" class="formButton">
+            <input type="submit" value="Reset" class="formButton" style="margin-right: 8cm;">
+                </form>
+        </center>
+</div>
+<br>
+<br>
+<br>
+<br>
+
 {%endblock content%}

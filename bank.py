@@ -55,6 +55,10 @@ def withdraw_amount():
 def transfer_money():
     return render_template("transfer_money.html")
 
+@app.route('/deposit_money')
+def deposit_money():
+    return render_template("deposit_money.html")
+
 @app.route('/account_statement')
 def account_statement():
     return render_template("account_statement.html")
