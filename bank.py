@@ -2,6 +2,7 @@ from flask import Flask,render_template,url_for,request,redirect, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
+from datetime import datetime
 
 app=Flask(__name__)
 
@@ -9,10 +10,10 @@ app=Flask(__name__)
 app.secret_key = 'thisismysecretkey123456789'
 
 # Enter your database connection details below
-app.config['MYSQL_HOST'] = ''
+app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = ''
 app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = ''
+app.config['MYSQL_DB'] = 'retailbank'
 
 # Intialize MySQL
 mysql = MySQL(app)
@@ -88,11 +89,24 @@ def create_customer_screen():
             cust_city = userDetails['city']
             cust_addr = cust_addr1 + " "+cust_city+" "+cust_state
             cur = mysql.connection.cursor()
+            cust_msg = 'Customer Created Successfully'
+            cust_status = 'Active'
+            act_status = 'Pending'
+            now = datetime.now()
+            act_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
+            cust_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
+            act_msg = ''
+
             cur.execute(
                 'INSERT INTO Customer(ws_ssn, ws_name, ws_age, ws_adrs) VALUES(%s, %s, %s, %s)',(cust_ssnid, cust_name, cust_age, cust_addr))
+            cur.execute(
+                'INSERT INTO CustomerStatus(ws_ssn, ws_status, ws_msg, ws_lastupdate) VALUES(%s, %s, %s, %s)', (cust_ssnid, cust_status, cust_msg, cust_date))
+            cur.execute(
+                'INSERT INTO AccountStatus(ws_status, ws_msg, ws_lastupdate) VALUES(%s, %s, %s)', (act_status, act_msg, act_date))
+
             mysql.connection.commit()
             cur.close()
-            return "Success"
+            return redirect('/create_customer_screen/success')
         return render_template('create_customer_screen.html', username=session['login'])
     return redirect(url_for('login'))
 
