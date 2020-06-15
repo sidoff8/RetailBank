@@ -3,6 +3,8 @@ from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
 from datetime import datetime
+from random import randint
+
 
 app=Flask(__name__)
 
@@ -11,8 +13,8 @@ app.secret_key = 'thisismysecretkey123456789'
 
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = ''
-app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'retailbank'
 
 # Intialize MySQL
@@ -76,10 +78,13 @@ def home():
     return redirect(url_for('login'))
 
 
+
+
 @app.route('/create_customer_screen', methods=['GET', 'POST'])
 def create_customer_screen():
     if 'loggedin' in session:
         if request.method == 'POST':
+            cust_id=randint(100000000, 999999999)
             userDetails = request.form
             cust_ssnid = userDetails['ssnid']
             cust_name = userDetails['custname']
@@ -95,18 +100,19 @@ def create_customer_screen():
             now = datetime.now()
             act_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
             cust_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
+            date_type='%d/%m/%Y %H:%i:%s'
             act_msg = ''
 
-            cur.execute(
-                'INSERT INTO Customer(ws_ssn, ws_name, ws_age, ws_adrs) VALUES(%s, %s, %s, %s)',(cust_ssnid, cust_name, cust_age, cust_addr))
-            cur.execute(
-                'INSERT INTO CustomerStatus(ws_ssn, ws_status, ws_msg, ws_lastupdate) VALUES(%s, %s, %s, %s)', (cust_ssnid, cust_status, cust_msg, cust_date))
-            cur.execute(
-                'INSERT INTO AccountStatus(ws_status, ws_msg, ws_lastupdate) VALUES(%s, %s, %s)', (act_status, act_msg, act_date))
-
-            mysql.connection.commit()
-            cur.close()
-            return redirect('/create_customer_screen/success')
+            try:
+                cur.execute('INSERT INTO Customer(ws_cust_id,ws_ssn, ws_name, ws_age, ws_adrs) VALUES(%s,%s, %s, %s, %s)',(cust_id,cust_ssnid, cust_name, cust_age, cust_addr))
+                cur.execute('INSERT INTO CustomerStatus(ws_cust_id,ws_ssn, ws_status, ws_msg, ws_lastupdate) VALUES(%s,%s, %s, %s, STR_TO_DATE(%s,%s))', (cust_id,cust_ssnid, cust_status, cust_msg, cust_date, date_type))
+                cur.execute('INSERT INTO AccountStatus(ws_cust_id,ws_status, ws_msg, ws_lastupdate) VALUES(%s,%s, %s, STR_TO_DATE(%s,%s))', (cust_id,act_status, act_msg, act_date, date_type))
+                mysql.connection.commit()
+                cur.close()
+                message="Customer creation initiated successfully"
+                return render_template('message.html', username=session['login'],message=message)
+            except Exception as e:
+                return render_template('message.html', username=session['login'],message=e) 
         return render_template('create_customer_screen.html', username=session['login'])
     return redirect(url_for('login'))
 
@@ -181,6 +187,13 @@ def deposit_money():
 def account_statement():
     if 'loggedin' in session:
         return render_template('account_statement.html', username=session['login'])
+    return redirect(url_for('login'))
+
+
+@app.route('/create_customer_screen/success')
+def success_message():
+    if 'loggedin' in session:
+        return render_template('message.html', username=session['login'])
     return redirect(url_for('login'))
 
 if __name__==("__main__"):
