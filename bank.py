@@ -13,8 +13,8 @@ app.secret_key = 'thisismysecretkey123456789'
 
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_USER'] = 'himan'
+app.config['MYSQL_PASSWORD'] = 'himan'
 app.config['MYSQL_DB'] = 'retailbank'
 
 # Intialize MySQL
@@ -128,15 +128,49 @@ def delete_customer():
         return render_template('delete_customer.html', username=session['login'])
     return redirect(url_for('login'))
 
+
 @app.route('/customer_status')
 def customer_status():
     if 'loggedin' in session:
-        return render_template('customer_status.html', username=session['login'])
+        cur = mysql.connection.cursor()
+        try:
+            sql_select_Query = 'SELECT * FROM CustomerStatus'
+            cur.execute(sql_select_Query)
+            cust_sts = cur.fetchall()
+            cur.close()
+        except Exception as e:
+            return render_template('message.html', username=session['login'], message=e)
+        return render_template('customer_status.html', username=session['login'], cust_status=cust_sts)
     return redirect(url_for('login'))
 
-@app.route('/create_account')
+
+@app.route('/create_account', methods=['GET', 'POST'])
 def create_account():
     if 'loggedin' in session:
+        if request.method == 'POST':
+            acct_id = randint(100000000, 999999999)
+            userDetails = request.form
+            cust_id = userDetails['cust_id']
+            acct_type = userDetails['acct_type']
+            dpst_amt = userDetails['dpst_amt']
+            cur = mysql.connection.cursor()
+            act_status = 'Active'
+            now = datetime.now()
+            act_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
+            cust_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
+            date_type = '%d/%m/%Y %H:%i:%s'
+            act_msg = 'Account Created Successfully'
+            try:
+                cur.execute('INSERT INTO Account(ws_cust_id,ws_acct_id, ws_acct_type, ws_acct_balance, ws_acct_crdate, ws_acct_lasttrdate) VALUES(%s,%s, %s, %s, STR_TO_DATE(%s,%s), STR_TO_DATE(%s,%s))',
+                            (cust_id, acct_id, acct_type, dpst_amt, cust_date, date_type, act_date, date_type))
+                cur.execute('UPDATE AccountStatus SET ws_acct_id = %s, ws_acct_type = %s, ws_status = %s , ws_msg =  %s, ws_lastupdate = STR_TO_DATE(%s,%s) WHERE ws_cust_id = %s',
+                            (acct_id, acct_type, act_status, act_msg, cust_date, date_type, cust_id))
+                mysql.connection.commit()
+                cur.close()
+                message = "Customer Account Created successfully"
+                return render_template('message.html', username=session['login'], message=message)
+            except Exception as e:
+                return render_template('message.html', username=session['login'], message=e)
         return render_template('create_account.html', username=session['login'])
     return redirect(url_for('login'))
 
@@ -145,13 +179,20 @@ def delete_account():
     if 'loggedin' in session:
         return render_template('delete_account.html', username=session['login'])
     return redirect(url_for('login'))
-
+    
 @app.route('/account_status')
 def account_status():
     if 'loggedin' in session:
-        return render_template('account_status.html', username=session['login'])
+        cur = mysql.connection.cursor()
+        try:
+            sql_select_Query = 'SELECT * FROM AccountStatus'
+            cur.execute(sql_select_Query)
+            acct_sts = cur.fetchall()
+            cur.close()
+        except Exception as e:
+            return render_template('message.html', username=session['login'], message=e)
+        return render_template('account_status.html', username=session['login'], acct_status=acct_sts)
     return redirect(url_for('login'))
-
 
 @app.route('/customer_search')
 def customer_search():

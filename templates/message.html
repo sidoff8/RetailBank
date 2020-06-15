@@ -1,21 +1,306 @@
-
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Success</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<html>
 
+<head>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial;
+            background-color: #e0dede;
+        }
+
+        /* Header/Blog Title */
+        .header {
+            padding: 30px 50px 0 50px;
+            text-align: center;
+            background: #000000;
+            height: 200px;
+            margin-bottom: 0.8cm;
+        }
+
+        .header h1 {
+            color: #fbd46d;
+            text-align: left;
+            margin-left: 37.79px;
+            font-size: 37.79px;
+        }
+
+        /* Style the top navigation bar */
+        .topnav {
+            overflow: hidden;
+            background-color: #fbd46d;
+            margin-left: 37.79px;
+            margin-right: 37.79px;
+            margin-top: 54.8px;
+        }
+
+        /* Style the topnav links */
+        .topnav a {
+            float: left;
+            display: block;
+            color: #000000;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Change color on hover */
+        .topnav a:hover {
+            background-color: #000000;
+            color: #fbd46d;
+        }
+
+        span {
+            color: #ffffff;
+        }
+
+        .bodyForm span {
+            font-weight: bold;
+            font-size: 30.23px;
+            color: #000000;
+        }
+
+
+        /* Footer */
+        .footer {
+            padding: 15px;
+            height: 7cm;
+            /*text-align: center;*/
+            background: #000000;
+            color: #fbd46d;
+        }
+
+        .footer span {
+            color: #fbd46d;
+            /*font-size: 22.67px;*/
+        }
+
+        /*line above footer*/
+        .line {
+            margin-top: 130px;
+            height: 7.55px;
+            background: #fbd46d;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .formButton {
+            padding: .2cm .5cm;
+            background-color: black;
+            color: #fbd46d;
+            font-weight: bold;
+            font-size: .4cm;
+        }
+
+        .column {
+            float: left;
+            width: 30%;
+            padding: 10px;
+            height: 200px;
+            /* Should be removed. Only for demonstration */
+        }
+
+        .column p {
+            color: white;
+        }
+
+        #popup {
+            display: inline-block;
+            opacity: 0;
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            padding: 1em;
+            transform: translateX(-50%);
+            background: #fff;
+            border: 1px solid #888;
+            box-shadow: 1px 1px .5em 0 rgba(0, 0, 0, .5);
+            transition: opacity .3s ease-in-out;
+        }
+
+        #popup.hidden {
+            display: none;
+        }
+
+        #popup.fade-in {
+            opacity: 1;
+        }
+
+        .is-blured {
+            filter: blur(10px);
+            -webkit-filter: blur(10px);
+        }
+
+
+
+
+        blockquote {
+            min-height: 5em;
+            padding: 1em 4em;
+            font: 1em/150% sans-serif;
+            position: relative;
+            background-color: #fbd46d;
+        }
+
+        blockquote::before,
+        blockquote::after {
+            position: absolute;
+            height: 3rem;
+            font: 6rem/100% Georgia, "Times New Roman", Times, serif;
+        }
+
+        blockquote::before {
+            content: '“';
+            top: 0.3rem;
+            left: 0.9rem;
+        }
+
+        blockquote::after {
+            content: '”';
+            bottom: 0.3rem;
+            right: 0.8rem;
+        }
+
+        blockquote:lang(fr)::before {
+            content: '«';
+            top: -1.5rem;
+            left: 0.5rem;
+        }
+
+        blockquote:lang(fr)::after {
+            content: '»';
+            bottom: 2.6rem;
+            right: 0.5rem
+        }
+
+        blockquote i {
+            display: block;
+            font-size: 0.8em;
+            margin-top: 1rem;
+            text-style: italic;
+            text-align: right;
+        }
+
+
+
+
+
+
+        .successButton {
+            display: block;
+            width: 200px;
+            height: 40px;
+            background: black;
+            padding: 6px;
+            text-align: center;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            line-height: 25px;
+            text-decoration: none;
+            margin-top: .5cm;
+            margin-left: 1.5cm;
+        }
+    </style>
 </head>
-<body class="bg-white">
-<div class="container mt-4">
-    <div class="w-25 m-auto bg-secondary p-4">
-        <h1 text-center text-white mt-4 mb-2>{{message}}</h1>
-        <div class="form-group">
-            <a href="/home" class="btn btn-success" style="margin-right: 8cm;">OK</a>
+
+<body>
+
+    <div class="header is-blured">
+        <h1>FedChoice <span>Bank</span></h1>
+        <div class="topnav">
+            <a href="#">Home</a>
+            <a href="#">Customer Management🔻</a>
+            <a href="#">Account Manaagement🔻</a>
+            <a href="#">Status Details🔻</a>
+            <a href="#">Account Operations🔻</a>
+            <a href="#">Logout</a>
+        </div>
+    </div><br>
+    <div class="bodyForm is-blured">
+        <center>
+            <span>Create Customer Screen</span><br><br><br>
+            <form action="" style="margin-top: .8cm;">
+                <label for="fname" style="margin-right:4cm;">Customer SSN Id<span
+                        style="color: red;font-size: .5cm;">*</span></label>
+                <input type="text" id="fname" name="fname"><br><br>
+                <label for="lname" style="margin-right:4.3cm;">Customer Name<span
+                        style="color: red;font-size: .5cm;">*</span></label>
+                <input type="text" id="lname" name="lname"><br><br>
+                <label for="fname" style="margin-right:6.6cm;">Age<span
+                        style="color: red;font-size: .5cm;">*</span></label>
+                <input type="text" id="fname" name="fname"><br><br>
+                <label for="lname" style="margin-right:5.8cm;">Address<span
+                        style="color: red;font-size: .5cm;">*</span></label>
+                <input type="text" id="lname" name="lname"><br><br>
+                <label for="fname" style="margin-right:6.5cm;">State</label>
+                <input type="text" id="lname" name="lname"><br><br>
+                <label for="lname" style="margin-right:6.8cm;">City</label>
+                <input type="text" id="lname" name="lname"><br><br>
+                <span style="color: red;font-size: .4cm;margin-right: 8cm;">(*)Fields are compulsory</span><br><br>
+            </form>
+        </center>
+    </div>
+
+
+
+
+    <div id="popup" class="hidden">
+        <blockquote>{{ message }} <a href="/home" class="successButton">Okay Thanks</a></blockquote>
+    </div>
+
+
+
+    <div class="line is-blured"></div>
+    <div class="footer is-blured">
+        <div class="row">
+            <div class="column" style="background-color:black;margin-left: 2cm;">
+                <h2>About</h2>
+                <p>FedChoice Bank was founded on 14th June 2016 with the objective of providing with the details
+                    services based on Retail Banking operations. The Retail Internet Banking of FedChoice Bank offers a
+                    plehora of products and services, to cater its customers by providing certain animus service with an
+                    easy volving offers and ways to do required job without hurdling the process.</p>
+            </div>
+            <div class="column" style="background-color:black;">
+                <h2>Service</h2>
+                <p>Retail and Customer Banking,<br> Personal Internet Banking,<br>Corporate Internet Banking,<br>Debit
+                    and Credit Cards<br></p>
+            </div>
+            <div class="column" style="background-color:black;">
+                <h2>Contact Us</h2>
+                <p>Email: customer.service@fedchoice.com<br>Contact No: 022-42406778, 022-54567890<br>Address: Corporate
+                    Office, Madame Cama Road,<br> Nariman Point, Mumbai, Maharastra 400021</p>
+            </div>
         </div>
     </div>
-</div>
+    <script type="text/javascript">
+        /* ----- JavaScript ----- */
+        window.onload = function () {
+            /* Cache the popup. */
+            var popup = document.getElementById("popup");
 
+            /* Show the popup. */
+            popup.classList.remove("hidden");
+
+            /* Fade the popup in */
+            setTimeout(() => popup.classList.add("fade-in"));
+
+            /* Close the popup when a city is selected. */
+            document.getElementById("selectCity").onchange = function () {
+                /* Fade the popup out */
+                popup.classList.remove("fade-in");
+
+                /* Hide the popup. */
+                setTimeout(() => popup.classList.add("hidden"), 300);
+            };
+        };
+    </script>
 </body>
+
 </html>

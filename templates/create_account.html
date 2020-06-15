@@ -2,23 +2,24 @@
 {%block content%}
 <div class="bodyForm">
 	<center>
-    	<span>Create Account</span><br><br><br>
-        <form action="" style="margin-top: .8cm;">
-  			<label for="fname" style="margin-right:4cm;">Customer Id<span style="color: red;font-size: .5cm;">*</span></label>
-  			<input type="text" id="fname" name="fname"><br><br>
-        <label for="fname" style="margin-right:3.8cm;">Account Type<span style="color: red;font-size: .5cm;">*</span></label>
-  			<select id="cars" name="cars" style="width: 4.7cm;">
-  				<option value=""></option>
-  				<option value=""></option>
-  				<option value=""></option>
-  				<option value=""></option>
-			 </select><br><br>
-       <label for="lname" style="margin-right:3cm;">Deposite Amount<span style="color: red;font-size: .5cm;">*</span></label>
-        <input type="text" id="lname" name="lname"><br><br>
+		<span>Create Account</span><br><br><br>
+		<form action="/create_account" method="POST" style="margin-top: .8cm;">
+			<label for="cust_id" style="margin-right:4cm;">Customer Id<span
+					style="color: red;font-size: .5cm;">*</span></label>
+			<input type="text" id="cust_id" name="cust_id"><br><br>
+			<label for="acct_type" style="margin-right:3.8cm;">Account Type<span
+					style="color: red;font-size: .5cm;">*</span></label>
+			<select id="acct_type" name="acct_type" style="width: 4.7cm;">
+				<option value="C">Current</option>
+				<option value="S">Savings</option>
+			</select><br><br>
+			<label for="dpst_amt" style="margin-right:3cm;">Deposite Amount<span
+					style="color: red;font-size: .5cm;">*</span></label>
+			<input type="text" id="dpst_amt" name="dpst_amt"><br><br>
 			<span style="color: red;font-size: .4cm;margin-right: 6.8cm;">(*)Fields are compulsory</span><br><br>
-            <input type="submit" value="Submit" class="formButton" style="align-items: center;">
+			<input type="submit" value="Submit" class="formButton" style="align-items: center;">
 		</form>
-        </center>
+	</center>
 </div>
 <br>
 <br>
