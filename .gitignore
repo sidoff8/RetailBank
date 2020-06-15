@@ -3,3 +3,6 @@ venv/
 
 # Python cache memory
 __pycache__/
+
+# Visual studio settings
+.vscode/
