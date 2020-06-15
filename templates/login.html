@@ -164,24 +164,25 @@ span.psw {
 
 <button onclick="document.getElementById('id01').style.display='block'" style="width:auto; margin-left: 23cm;">Login Here</button>
 
+<p style="color: red; height: 5cm;">{{ msg }}</p>
+
 <div id="id01" class="modal">
   
   <form class="modal-content animate" action="{{ url_for('login') }}" method="post">
     <div class="imgcontainer">
     <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-      <img src="/static/Images/dddd.jfif" alt="Avatar" class="avatar">
+      <img src="/static/Images/Login.jfif" alt="Avatar" class="avatar">
     </div>
 
     <div class="container">
       <label for="uname"><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="username" minlength="8" autocomplete="off" arequired>
+      <input type="text" placeholder="Enter Username" name="username" minlength="8" autocomplete="off" required>
 
       <label for="psw"><b>Password</b></label>
       <input type="password" placeholder="Enter Password" name="password" minlength="10" autocomplete="off" required>
         
       <button type="submit" style="margin-left: 35%;">Login</button>
     </div>
-    <p style="color: red; height: 5cm;">{{msg}}</p>
   </form>
 </div>
 
