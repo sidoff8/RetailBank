@@ -13,8 +13,8 @@ app.secret_key = 'thisismysecretkey123456789'
 
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'himan'
-app.config['MYSQL_PASSWORD'] = 'himan'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'deep'
 app.config['MYSQL_DB'] = 'retailbank'
 
 # Intialize MySQL
@@ -92,7 +92,7 @@ def create_customer_screen():
             cust_addr1 = userDetails['addr']
             cust_state = userDetails['state']
             cust_city = userDetails['city']
-            cust_addr = cust_addr1 + " "+cust_city+" "+cust_state
+            cust_addr = cust_addr1 + ", "+cust_city+", "+cust_state
             cur = mysql.connection.cursor()
             cust_msg = 'Customer Created Successfully'
             cust_status = 'Active'
