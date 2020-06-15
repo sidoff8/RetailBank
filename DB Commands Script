@@ -1,0 +1,73 @@
+create database retailbank;
+
+use retailbank;
+
+DROP TABLE IF EXISTS Customer;
+CREATE TABLE Customer (
+	ws_ssn INT(9) NOT NULL,
+	ws_cust_id INT AUTO_INCREMENT,
+	ws_name VARCHAR(20) NOT NULL,
+	ws_adrs TEXT(50) NOT NULL,
+	ws_age SMALLINT NOT NULL,
+	PRIMARY KEY (ws_cust_id)
+);
+
+DROP TABLE IF EXISTS Account;
+CREATE TABLE Account
+(ws_cust_id INT(9) NOT NULL,
+ws_acct_id INT(9) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+ws_acct_type char(1) NOT NULL,
+ws_acct_balance DECIMAL(13,2) NOT NULL DEFAULT "000.00",
+ws_acct_crdate date NOT NULL,
+ws_acct_lasttrdate date NOT NULL,
+ws_acct_duration int NOT NULL,
+FOREIGN KEY (ws_cust_id) REFERENCES Customer(ws_cust_id));
+
+DROP TABLE IF EXISTS Transactions;
+CREATE TABLE Transactions
+(ws_cust_id INT(9) NOT NULL PRIMARY KEY,
+ws_accnt_type char(1) NOT NULL,
+ws_amt DECIMAL(13,2) NOT NULL,
+ws_trxn_date date NOT NULL,
+ws_src_typ char(1) NOT NULL,
+ws_tgt_typ char(1) NOT NULL,
+FOREIGN KEY (ws_cust_id) REFERENCES Customer(ws_cust_id));
+
+DROP TABLE IF EXISTS userstore;
+CREATE TABLE IF NOT EXISTS userstore(
+  	login varchar(20) NOT NULL,
+  	password varchar(20) NOT NULL,
+  	timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (login)
+);
+
+INSERT INTO `userstore` (`login`, `password`) VALUES ('deva0007', '@Deva0007@#');
+INSERT INTO `userstore` (`login`, `password`) VALUES ('max12345', '1234567890');
+
+DROP TABLE IF EXISTS CustomerStatus;
+CREATE TABLE CustomerStatus (
+	ws_ssn INT(9) NOT NULL,
+	ws_cust_id INT(9) NOT NULL AUTO_INCREMENT,
+	ws_status TEXT(10) NOT NULL,
+	ws_msg TEXT(50) NOT NULL,
+	ws_lastupdate datetime NOT NULL,
+	FOREIGN KEY (ws_cust_id) REFERENCES Customer(ws_cust_id));
+
+DROP TABLE IF EXISTS AccountStatus;
+CREATE TABLE AccountStatus (
+	ws_cust_id INT(9) NOT NULL AUTO_INCREMENT,
+	ws_acct_id INT(9),
+	ws_acct_type char(1),
+	ws_status TEXT(10),
+	ws_msg TEXT(50),
+	ws_lastupdate datetime NOT NULL,
+	FOREIGN KEY (ws_cust_id) REFERENCES Customer(ws_cust_id));
+
+DROP TABLE IF EXISTS CAStatus;
+DROP TABLE IF EXISTS CustomerStatus;
+DROP TABLE IF EXISTS AccountStatus;
+DROP TABLE IF EXISTS userstore;
+DROP TABLE IF EXISTS Transactions;
+DROP TABLE IF EXISTS Account;
+DROP TABLE IF EXISTS Customer;
+
