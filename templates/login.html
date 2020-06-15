@@ -164,8 +164,6 @@ span.psw {
 
 <button onclick="document.getElementById('id01').style.display='block'" style="width:auto; margin-left: 23cm;">Login Here</button>
 
-<p style="color: red; height: 5cm;">{{ msg }}</p>
-
 <div id="id01" class="modal">
   
   <form class="modal-content animate" action="{{ url_for('login') }}" method="post">
@@ -181,21 +179,15 @@ span.psw {
       <label for="psw"><b>Password</b></label>
       <input type="password" placeholder="Enter Password" name="password" minlength="10" autocomplete="off" required>
         
-      <button type="submit" style="margin-left: 35%;">Login</button>
+      <button type="submit" style="margin-left: 35%;" onclick="gfg_Run()">Login</button>
     </div>
+    <p style="color: red; height: 5cm; text-align: center;">{{ msg }}</p>
   </form>
 </div>
-
+<p style="color: red; height: 5cm; text-align: center;">{{ msg }}</p>
 <script>
 // Get the modal
 var modal = document.getElementById('id01');
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
 </script>
 
 </body>
