@@ -13,8 +13,8 @@ app.secret_key = 'thisismysecretkey123456789'
 
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_USER'] = 'himan'
+app.config['MYSQL_PASSWORD'] = 'himan'
 app.config['MYSQL_DB'] = 'retailbank'
 
 # Intialize MySQL
@@ -174,12 +174,56 @@ def create_account():
         return render_template('create_account.html', username=session['login'])
     return redirect(url_for('login'))
 
-@app.route('/delete_account')
+@app.route('/delete_account', methods = ['GET', 'POST'])
 def delete_account():
     if 'loggedin' in session:
+        if request.method == 'POST':
+            userDetails = request.form
+            #acct_id = userDetails['acctid']
+            acct_id = userDetails['AccountID']
+            cur = mysql.connection.cursor()
+            try:
+                sql_select_query = """delete from Account where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (acct_id,))
+                mysql.connection.commit()
+                sql_select_query = """delete from AccountStatus where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (acct_id,))
+                mysql.connection.commit()
+                cur.close()
+                acct_sts = "Acoount Deleted Successfully"
+                return render_template('message.html', username=session['login'], message=acct_sts)
+            except Exception as e:
+                return render_template('message.html', username=session['login'], message=e)
         return render_template('delete_account.html', username=session['login'])
     return redirect(url_for('login'))
-    
+
+
+@app.route('/deleteAccount', methods=['GET', 'POST'])
+def deleteAccount():
+    if 'loggedin' in session:  
+        if request.method == 'POST':
+            userDetails = request.form
+            acct_id = userDetails['acctid']
+            cust_id = userDetails['custid']
+            cur = mysql.connection.cursor()
+            try:
+                if cust_id:
+                    sql_select_query = """select ws_acct_id,ws_acct_type from Account where ws_cust_id = %s"""
+                    cur.execute(sql_select_query, (cust_id,))
+                    acct_sts = cur.fetchall()
+                    cur.close()
+                    return render_template('delete_account.html', username=session['login'], acct_status=acct_sts)
+                else:
+                    sql_select_query = """select ws_acct_id,ws_acct_type from Account where ws_acct_id = %s"""
+                    cur.execute(sql_select_query, (acct_id,))
+                    acct_sts = cur.fetchall()
+                    cur.close()
+                    return render_template('delete_account.html', username=session['login'], acct_status=acct_sts)
+            except Exception as e:
+                return render_template('message.html', username=session['login'], message=e)
+        return render_template('deleteAccount.html', username=session['login'])
+    return redirect(url_for('login'))
+
 @app.route('/account_status')
 def account_status():
     if 'loggedin' in session:
