@@ -29,8 +29,8 @@ CREATE TABLE Transactions
 ws_accnt_type char(1) NOT NULL,
 ws_amt DECIMAL(13,2) NOT NULL,
 ws_trxn_date date NOT NULL,
-ws_src_typ char(1) NOT NULL,
-ws_tgt_typ char(1) NOT NULL,
+ws_src_typ char(1),
+ws_tgt_typ char(1),
 FOREIGN KEY (ws_cust_id) REFERENCES Customer(ws_cust_id));
 
 DROP TABLE IF EXISTS userstore;
