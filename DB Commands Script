@@ -5,7 +5,7 @@ use retailbank;
 DROP TABLE IF EXISTS Customer;
 CREATE TABLE Customer (
 	ws_ssn INT(9) NOT NULL,
-	ws_cust_id INT ,
+	ws_cust_id INT,
 	ws_name VARCHAR(20) NOT NULL,
 	ws_adrs TEXT(50) NOT NULL,
 	ws_age SMALLINT NOT NULL,
@@ -20,7 +20,7 @@ ws_acct_type char(1) NOT NULL,
 ws_acct_balance DECIMAL(13,2) NOT NULL DEFAULT "000.00",
 ws_acct_crdate date NOT NULL,
 ws_acct_lasttrdate date NOT NULL,
-ws_acct_duration int NOT NULL,
+ws_acct_duration int,
 FOREIGN KEY (ws_cust_id) REFERENCES Customer(ws_cust_id));
 
 DROP TABLE IF EXISTS Transactions;
@@ -50,7 +50,7 @@ CREATE TABLE CustomerStatus (
 	ws_cust_id INT(9) NOT NULL,
 	ws_status TEXT(10) NOT NULL,
 	ws_msg TEXT(50) NOT NULL,
-	ws_lastupdate datetime NOT NULL,
+	ws_lastupdate datetime,
 	FOREIGN KEY (ws_cust_id) REFERENCES Customer(ws_cust_id));
 
 DROP TABLE IF EXISTS AccountStatus;
@@ -60,7 +60,7 @@ CREATE TABLE AccountStatus (
 	ws_acct_type char(1),
 	ws_status TEXT(10),
 	ws_msg TEXT(50),
-	ws_lastupdate datetime NOT NULL,
+	ws_lastupdate datetime,
 	FOREIGN KEY (ws_cust_id) REFERENCES Customer(ws_cust_id));
 
 DROP TABLE IF EXISTS CAStatus;
