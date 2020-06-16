@@ -1,4 +1,34 @@
 {% extends "layout.html" %}
 {%block content%}
-        <h1>Account Statement</h1>
+<div class="bodyForm">
+        <center>
+            <span>Account Statement</span><br><br><br>
+            <form action="" style="margin-top: .8cm;">
+                <label for="accountid" style="margin-right:4cm;">Account ID</label>
+                <input type="text" id="accountid" name="fname"><br><br><br>
+                <div> 
+                    <label style="margin-right: 5cm;"><input type="radio" name="colorRadio" value="C">Last Number of Transactions</label><br><br>
+                    <label style="margin-right: 7.5cm;"><input type="radio" name="colorRadio" value="Cplus"> Start-End Dates</label> 
+                </div> 
+        
+                <div class="C selectt"> 
+                    <label style="margin-right: 5cm;">Number of Transactions: </label>
+                    <input type="Number" name="ransactions">
+                </div> 
+                <br>
+            <br>
+            <br>
+                <div class="Cplus selectt"> 
+                    Start Date: <input type="date" id="start" name="trip-start" value="2018-07-22" min="2018-01-01" max="2018-12-31">
+                    End Date: <input type="date" id="start" name="trip-start" value="2018-07-22" min="2018-01-01" max="2018-12-31">
+                </div> 
+                <input type="submit" value="Submit" class="formButton" style="margin-right: 8cm; margin-top: .5cm;">
+            </form>
+            <br>
+            <br>
+            <br>
+            <br>
+
+        </center>
+        </div>
 {%endblock content%}

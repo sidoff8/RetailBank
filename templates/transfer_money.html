@@ -1,4 +1,28 @@
 {% extends "layout.html" %}
 {%block content%}
-        <h1>transfer money</h1>
+<div class="bodyForm">
+	<center>
+    	<span>Transfer Money</span><br><br><br>
+        <form action="" style="margin-top: .8cm;">
+  			<label for="lname" style="margin-right:4cm;">Customer Id</label>
+  			<input type="text" id="lname" name="lname"><br><br>
+        <label for="lname" style="margin-right:4.2cm;">Source Account Type</label>
+        <select id="cars" name="cars" style="width: 4.7cm;" required>
+          <option></option>
+          <option></option>
+          <option></option>
+        </select><br><br>
+        <label for="lname" style="margin-right:4.2cm;">Target Account Type</label>
+        <select id="cars" name="cars" style="width: 4.7cm;" required>
+          <option></option>
+          <option></option>
+          <option></option>
+        </select><br><br>
+  			<label for="lname" style="margin-right:4cm;">Transfer Amount</label>
+  			<input type="text" id="lname" name="lname"><br><br>
+  			
+          <input type="submit" value="Transfer" class="formButton" style="align-items: center;">
+		</form>
+</center>
+</div>
 {%endblock content%}

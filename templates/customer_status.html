@@ -11,7 +11,6 @@
         <th>Message</th>
         <th>Last Updated</th>
         <th>Operations</th>
-        <th>View Profile</th>
       </tr>
       {%  for cust_sts in cust_status %}
       <tr>
@@ -20,8 +19,7 @@
         <th>{{ cust_sts[2] }}</th>
         <th>{{ cust_sts[3] }}</th>
         <th>{{ cust_sts[4] }}</th>
-        <th>Refresh</th>
-        <th>View Details</th>
+        <th><a href="/customer_status" onclick="window.location.reload(true);">Refresh</a></th>
       </tr>
       {%  endfor %}
     </table>

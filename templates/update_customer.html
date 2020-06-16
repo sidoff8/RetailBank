@@ -1,4 +1,34 @@
 {% extends "layout.html" %}
 {%block content%}
-        <h1>Update Customer</h1>
+<div class="bodyForm">
+	<center>
+    	<span>Update Customer</span><br><br><br>
+        <form action="" style="margin-top: .8cm;">
+  			<label for="fname" style="margin-right:4cm;">Customer SSN Id</label>
+  			<span style="font-size: .45cm;">Data from DB</span><br><br>
+  			<label for="lname" style="margin-right:5cm;">Customer Id</label>
+  			<span style="font-size: .45cm;">Data from DB</span><br><br>
+        <label for="fname" style="margin-right:3.4cm;">Old Customer Name</label>
+  			<span style="font-size: .45cm;">Data from DB</span><br><br>
+  			<label for="lname" style="margin-right:1.3cm;">New Customer Name<span style="color: red;font-size: .5cm;">*</span></label>
+  			<input type="text" id="lname" name="lname" required><br><br>
+        <label for="fname" style="margin-right:5cm;">Old Address</label>
+        <span style="font-size: .45cm;">Data from DB</span><br><br>
+        <label for="lname" style="margin-right:3cm;">New Address<span style="color: red;font-size: .5cm;">*</span></label>
+        <input type="text" id="lname" name="lname" required><br><br>
+  			<label for="lname" style="margin-right:6cm;">Old Age</label>
+        <span style="font-size: .45cm;">Data from DB</span><br><br>
+        <label for="lname" style="margin-right:4cm;">New Age<span style="color: red;font-size: .5cm;">*</span></label>
+        <input type="text" id="lname" name="lname" required><br><br>
+			   <span style="color: red;font-size: .4cm;margin-right: 6cm;">(*)Fields are compulsory</span><br><br>
+  			
+          <input type="submit" value="Update" class="formButton" style="align-items: center;">
+		</form>
+
+</center>>
+</div>
+<br>
+<br>
+<br>
+<br>
 {%endblock content%}
