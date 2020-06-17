@@ -16,7 +16,7 @@
 </div>
 <script> type="text/javascript">
   jQuery(function ($) {
-    var $inputs = $('input[name=acctid],input[name=custid]');
+    var $inputs = $('input[name=ssnid],input[name=custid]');
     $inputs.on('input', function () {
       // Set the required property of the other input to false if this input is not empty.
       $inputs.not(this).prop('required', !$(this).val().length);
