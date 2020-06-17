@@ -2,22 +2,22 @@
 {%block content%}
 <div class="bodyForm">
 	<center>
-    	<span>Deposite Money</span><br><br><br>
-        <form action="" style="margin-top: .8cm;">
+      {%  for acct_sts in acct_status %}
+    	<span>Deposit Money</span><br><br><br>
+        <form action="/deposit_money" method="POST" style="margin-top: .8cm;">
   			<label for="lname" style="margin-right:4cm;">Customer Id</label>
-  			<span style="font-size: .45cm;">Data from DB</span><br><br>
+  			<span style="font-size: .45cm;">{{ acct_sts[0] }}</span><br><br>
         <label for="lname" style="margin-right:4.2cm;">Account Id</label>
-        <span style="font-size: .45cm;">Data from DB</span><br><br>
+        <span style="font-size: .45cm;">{{ acct_sts[1] }}</span><br><br><input type="hidden" name="AccountID" value="{{ acct_sts[1] }}"><br><br>
         <label for="lname" style="margin-right:3.65cm;">Account Type</label>
-        <span style="font-size: .45cm;">Data from DB</span><br><br>
+        <span style="font-size: .45cm;">{{ acct_sts[2] }}</span><br><br>
         <label for="lname" style="margin-right:4.8cm;">Balance</label>
-        <span style="font-size: .45cm;">Data from DB</span><br><br>
-  			<label for="lname" style="margin-right:2.5cm;">Deposite</label>
-  			<input type="text" id="lname" name="lname"><br><br>
-  			
-          <input type="submit" value="Submit" class="formButton" style="align-items: center;">
+        <span style="font-size: .45cm;">{{ acct_sts[3] }}</span><br><br>
+  			<label for="dpst_amt" style="margin-right:2.5cm;">Deposit Amount</label>
+  			<input type="text" id="dpst_amt" name="dpst_amt"><br><br>
+        <input type="submit" value="Submit" class="formButton" style="align-items: center;">
 		</form>
-
+{%  endfor %}
     </center>
 </div>
 

@@ -2,22 +2,23 @@
 {%block content%}
 <div class="bodyForm">
 	<center>
+    {%  for acct_sts in acct_status %}
     	<span>Withdraw Amount</span><br><br><br>
-        <form action="" style="margin-top: .8cm;">
+        <form action="/withdraw_amount" method="POST" style="margin-top: .8cm;">
   			<label for="lname" style="margin-right:4cm;">Customer Id</label>
-  			<span style="font-size: .45cm;">Data from DB</span><br><br>
+  			<span style="font-size: .45cm;">{{ acct_sts[0] }}</span><br><br>
         <label for="lname" style="margin-right:4.2cm;">Account Id</label>
-        <span style="font-size: .45cm;">Data from DB</span><br><br>
+        <span style="font-size: .45cm;">{{ acct_sts[1] }}</span><input type="hidden" name="AccountID" value="{{ acct_sts[1] }}"><br><br>
         <label for="lname" style="margin-right:3.65cm;">Account Type</label>
-        <span style="font-size: .45cm;">Data from DB</span><br><br>
+        <span style="font-size: .45cm;">{{ acct_sts[2] }}</span><br><br>
         <label for="lname" style="margin-right:4.8cm;">Balance</label>
-        <span style="font-size: .45cm;">Data from DB</span><br><br>
-  			<label for="lname" style="margin-right:1cm;">Withdraw Amount</label>
-  			<input type="text" id="lname" name="lname"><br><br>
-  			
+        <span style="font-size: .45cm;">{{ acct_sts[3] }}</span><br><br>
+  			<label for="witd_amt" style="margin-right:1cm;">Withdraw Amount</label>
+  			<input type="number" id="witd_amt" name="witd_amt" min="1" max="{{ acct_sts[3] }}"><br><br>
+          
           <input type="submit" value="Submit" class="formButton" style="align-items: center;">
 		</form>
-
+{%  endfor %}
         </center>
         </div>
         <br>

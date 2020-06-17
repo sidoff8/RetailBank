@@ -1,4 +1,35 @@
 {% extends "layout.html" %}
 {%block content%}
-        <h1>Delete Customer</h1>
+<div class="bodyForm">
+        <center>
+                {%  for cust_sts in cust_status %}
+                <span>Delete Customer</span><br><br><br>
+                <form action="/delete_customer" method="POST" style="margin-top: .8cm;">
+                        <label for="fname" style="margin-right:4cm;">Customer SSN ID<span
+                                        style="color: red;font-size: .5cm;">*</span></label>
+                        <span>{{ cust_sts[0] }}</span><input type="hidden" name="CustomerID"
+                                value="{{ cust_sts[1] }}"><br><br>
+
+                        <label for="fname" style="margin-right:3.8cm;">Customer ID<span
+                                        style="color: red;font-size: .5cm;">*</span></label>
+                        <span>{{ cust_sts[1] }}</span><br><br>
+
+                        <label for="fname" style="margin-right:4cm;">Customer Name<span style="color: red;font-size: .5cm;">*</span></label>
+                        <span>{{ cust_sts[2] }}</span><br><br>
+                        
+                        <label for="fname" style="margin-right:3.8cm;">Age<span style="color: red;font-size: .5cm;">*</span></label>
+                        <span>{{ cust_sts[4] }}</span><br><br>
+
+                        <label for="fname" style="margin-right:4cm;">Address<span style="color: red;font-size: .5cm;">*</span></label>
+                        <span>{{ cust_sts[3] }}</span><br><br>
+
+                        <input type="submit" value="Delete Customer" class="formButton" style="align-items: center;">
+                </form>
+                {%  endfor %}
+        </center>
+</div>
+<br>
+<br>
+<br>
+<br>
 {%endblock content%}

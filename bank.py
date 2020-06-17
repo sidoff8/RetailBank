@@ -13,8 +13,8 @@ app.secret_key = 'thisismysecretkey123456789'
 
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_USER'] = 'himan'
+app.config['MYSQL_PASSWORD'] = 'himan'
 app.config['MYSQL_DB'] = 'retailbank'
 
 # Intialize MySQL
@@ -169,12 +169,55 @@ def update_customer():
         return render_template('customer_update.html', username=session['login'])
     return redirect(url_for('login'))
 
-@app.route('/delete_customer')
+
+@app.route('/delete_customer', methods=['GET', 'POST'])
 def delete_customer():
     if 'loggedin' in session:
+        if request.method == 'POST':
+            userDetails = request.form
+            cust_id = userDetails['CustomerID']
+            cur = mysql.connection.cursor()
+            try:
+                sql_select_query = """delete from CustomerStatus where ws_cust_id = %s"""
+                cur.execute(sql_select_query, (cust_id,))
+                mysql.connection.commit()
+                sql_select_query = """delete from Customer where ws_cust_id = %s"""
+                cur.execute(sql_select_query, (cust_id,))
+                mysql.connection.commit()
+                cur.close()
+                cust_sts = "Customer Deleted Successfully"
+                return render_template('message.html', username=session['login'], message=cust_sts)
+            except Exception as e:
+                return render_template('message.html', username=session['login'], message=e)
         return render_template('delete_customer.html', username=session['login'])
     return redirect(url_for('login'))
 
+
+@app.route('/deleteCustomer', methods=['GET', 'POST'])
+def deleteCustomer():
+    if 'loggedin' in session:
+        if request.method == 'POST':
+            userDetails = request.form
+            cust_ssn_id = userDetails['custssnid']
+            cust_id = userDetails['custid']
+            cur = mysql.connection.cursor()
+            try:
+                if cust_id:
+                    sql_select_query = """select * from Customer where ws_cust_id = %s"""
+                    cur.execute(sql_select_query, (cust_id,))
+                    cust_sts = cur.fetchall()
+                    cur.close()
+                    return render_template('delete_customer.html', username=session['login'], cust_status=cust_sts)
+                else:
+                    sql_select_query = """select * from Customer where ws_ssn = %s"""
+                    cur.execute(sql_select_query, (cust_ssn_id,))
+                    cust_sts = cur.fetchall()
+                    cur.close()
+                    return render_template('delete_customer.html', username=session['login'], cust_status=cust_sts)
+            except Exception as e:
+                return render_template('message.html', username=session['login'], message=e)
+        return render_template('deleteCustomer.html', username=session['login'])
+    return redirect(url_for('login'))
 
 @app.route('/customer_status')
 def customer_status():
@@ -237,7 +280,7 @@ def delete_account():
                 cur.execute(sql_select_query, (acct_id,))
                 mysql.connection.commit()
                 cur.close()
-                acct_sts = "Acoount Deleted Successfully"
+                acct_sts = "Account Deleted Successfully"
                 return render_template('message.html', username=session['login'], message=acct_sts)
             except Exception as e:
                 return render_template('message.html', username=session['login'], message=e)
@@ -297,10 +340,57 @@ def account_search():
         return render_template('account_search.html', username=session['login'])
     return redirect(url_for('login'))
 
-@app.route('/withdraw_amount')
+
+@app.route('/withdraw_amount', methods=['GET', 'POST'])
 def withdraw_amount():
     if 'loggedin' in session:
+        if request.method == 'POST':
+            userDetails = request.form
+            witd_amt = userDetails['witd_amt']
+            witd_amt = eval(witd_amt)
+            acct_id = userDetails['AccountID']
+            cur = mysql.connection.cursor()
+            try:
+                sql_select_query = """select ws_acct_balance from Account where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (acct_id,))
+                avail_blc =cur.fetchall()
+                blc = int(avail_blc[0][0])
+                new_blc = blc - witd_amt
+                sql_select_query = """update Account set ws_acct_balance =%s where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (new_blc,acct_id,))
+                mysql.connection.commit()
+                cur.close()
+                acct_sts = "Account Balance Withdrawn Successfully"
+                return render_template('message.html', username=session['login'], message=acct_sts)
+            except Exception as e:
+                return render_template('message.html', username=session['login'], message=e)
         return render_template('withdraw_amount.html', username=session['login'])
+    return redirect(url_for('login'))
+
+@app.route('/withdrawAmount', methods=['GET', 'POST'])
+def withdrawAmount():
+    if 'loggedin' in session:
+        if request.method == 'POST':
+            userDetails = request.form
+            acct_id = userDetails['acctid']
+            cust_id = userDetails['custid']
+            cur = mysql.connection.cursor()
+            try:
+                if cust_id:
+                    sql_select_query = """select ws_cust_id,ws_acct_id,ws_acct_type,ws_acct_balance from Account where ws_cust_id = %s"""
+                    cur.execute(sql_select_query, (cust_id,))
+                    acct_sts= cur.fetchall()
+                    cur.close()
+                    return render_template('withdraw_amount.html', username=session['login'], acct_status=acct_sts)
+                else:
+                    sql_select_query = """select ws_cust_id,ws_acct_id,ws_acct_type,ws_acct_balance from Account where ws_acct_id = %s"""
+                    cur.execute(sql_select_query, (acct_id,))
+                    acct_sts = cur.fetchall()
+                    cur.close()
+                    return render_template('withdraw_amount.html', username=session['login'], acct_status=acct_sts)
+            except Exception as e:
+                return render_template('message.html', username=session['login'], message=e)
+        return render_template('withdrawAmount.html', username=session['login'])
     return redirect(url_for('login'))
 
 @app.route('/transfer_money')
@@ -309,10 +399,57 @@ def transfer_money():
         return render_template('transfer_money.html', username=session['login'])
     return redirect(url_for('login'))
 
-@app.route('/deposit_money')
+@app.route('/deposit_money', methods=['GET', 'POST'])
 def deposit_money():
     if 'loggedin' in session:
+        if request.method == 'POST':
+            userDetails = request.form
+            dpst_amt = userDetails['dpst_amt']
+            dpst_amt = eval(dpst_amt)
+            acct_id = userDetails['AccountID']
+            cur = mysql.connection.cursor()
+            try:
+                sql_select_query = """select ws_acct_balance from Account where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (acct_id,))
+                avail_blc = cur.fetchall()
+                blc = int(avail_blc[0][0])
+                new_blc = blc + dpst_amt
+                sql_select_query = """update Account set ws_acct_balance =%s where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (new_blc, acct_id,))
+                mysql.connection.commit()
+                cur.close()
+                acct_sts = "Account Balance Deposited Successfully"
+                return render_template('message.html', username=session['login'], message=acct_sts)
+            except Exception as e:
+                return render_template('message.html', username=session['login'], message=e)
         return render_template('deposit_money.html', username=session['login'])
+    return redirect(url_for('login'))
+
+
+@app.route('/depositMoney', methods=['GET', 'POST'])
+def depositAmount():
+    if 'loggedin' in session:
+        if request.method == 'POST':
+            userDetails = request.form
+            acct_id = userDetails['acctid']
+            cust_id = userDetails['custid']
+            cur = mysql.connection.cursor()
+            try:
+                if cust_id:
+                    sql_select_query = """select ws_cust_id,ws_acct_id,ws_acct_type,ws_acct_balance from Account where ws_cust_id = %s"""
+                    cur.execute(sql_select_query, (cust_id,))
+                    acct_sts = cur.fetchall()
+                    cur.close()
+                    return render_template('deposit_money.html', username=session['login'], acct_status=acct_sts)
+                else:
+                    sql_select_query = """select ws_cust_id,ws_acct_id,ws_acct_type,ws_acct_balance from Account where ws_acct_id = %s"""
+                    cur.execute(sql_select_query, (acct_id,))
+                    acct_sts = cur.fetchall()
+                    cur.close()
+                    return render_template('deposit_money.html', username=session['login'], acct_status=acct_sts)
+            except Exception as e:
+                return render_template('message.html', username=session['login'], message=e)
+        return render_template('depositMoney.html', username=session['login'])
     return redirect(url_for('login'))
 
 @app.route('/account_statement')
