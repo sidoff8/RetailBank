@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{%block content%}
+<div class="bodyForm"><br><br><br>
+    <center>
+        <span>Transfer Details</span><br><br>
+        <form action="/transferMoney" method="POST" style="margin-top: .8cm;">
+            <label for="tranferamt" style="margin-right:4cm;">Transfer Amount</label>
+            <input type="text" name="tranferamt" required><br><br>
+            <label for="srcacctid" style="margin-right:3.8cm;">Source Account Id</label>
+            <input type="text" name="srcacctid" required><br><br>
+            <label for="trgtacctid" style="margin-right:3.8cm;">Target Account Id</label>
+            <input type="text" name="trgtacctid" required><br><br>
+            <input type="submit" value="Submit" class="formButton" style="align-items: center;">
+        </form>
+    </center>
+</div>
+</div>
+<br>
+<br>
+<br>
+<br>
+{%endblock content%}

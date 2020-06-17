@@ -3,26 +3,12 @@
 <div class="bodyForm">
 	<center>
     	<span>Transfer Money</span><br><br><br>
-        <form action="" style="margin-top: .8cm;">
-  			<label for="lname" style="margin-right:4cm;">Customer Id</label>
-  			<input type="text" id="lname" name="lname"><br><br>
-        <label for="lname" style="margin-right:4.2cm;">Source Account Type</label>
-        <select id="cars" name="cars" style="width: 4.7cm;" required>
-          <option></option>
-          <option></option>
-          <option></option>
-        </select><br><br>
-        <label for="lname" style="margin-right:4.2cm;">Target Account Type</label>
-        <select id="cars" name="cars" style="width: 4.7cm;" required>
-          <option></option>
-          <option></option>
-          <option></option>
-        </select><br><br>
-  			<label for="lname" style="margin-right:4cm;">Transfer Amount</label>
-  			<input type="text" id="lname" name="lname"><br><br>
-  			
-          <input type="submit" value="Transfer" class="formButton" style="align-items: center;">
-		</form>
+  			<label for="lname" style="margin-right:4cm;">Source Account Id</label><span>{{ scractid }}</span><br><br>
+        <label for="lname" style="margin-right:4cm;">Target Account Id</label><span>{{ trgtactid }}</span><br><br>
+  			<label for="lname" style="margin-right:4cm;">Source Balance Before Transaction </label><span>{{ prvActSrc }}</span><br><br>
+  			<label for="lname" style="margin-right:4cm;">Target Balance Before Transaction </label><span>{{ prvActTrgt }}</span><br><br>
+  			<label for="lname" style="margin-right:4cm;">Source Balance After Transaction </label><span>{{ nxtActSrc }}</span><br><br>
+        <label for="lname" style="margin-right:4cm;">Target Balance After Transaction </label><span>{{ nxtActTrgt }}</span><br><br>
 </center>
 </div>
 {%endblock content%}

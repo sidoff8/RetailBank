@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{%block content%}
+<div class="bodyForm">
+  <center>
+    <span>Customer Status</span><br><br><br>
+    <table style="width:50%">
+      <tr>
+        <th>Customer Id</th>
+        <th>Customer SSN ID</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Age</th>
+        <th>Operations</th>
+      </tr>
+      {%  for cust_sts in cust_status %}
+      <tr>
+        <th>{{ cust_sts[1] }}</th>
+        <th>{{ cust_sts[0] }}</th>
+        <th>{{ cust_sts[2] }}</th>
+        <th>{{ cust_sts[3] }}</th>
+        <th>{{ cust_sts[4] }}</th>
+        <th><a href="/customer_search" onclick="window.location.reload(true);">Refresh</a></th>
+      </tr>
+      {%  endfor %}
+    </table>
+  </center>
+</div>
+<br>
+<br>
+<br>
+<br>
+{%endblock content%}

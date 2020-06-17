@@ -1,4 +1,30 @@
 {% extends "layout.html" %}
 {%block content%}
-        <h1>Account Search</h1>
+        <div class="bodyForm"><br><br><br>
+                <center>
+                        <span>Account Search</span><br><br>
+                        <form action="/account_search" method="POST" style="margin-top: .8cm;">
+                                <label for="acctid" style="margin-right:4cm;">Account Id</label>
+                                <input type="text" name="acctid" required><br><br>
+                                <label>Or</label><br><br>
+                                <label for="custid" style="margin-right:3.8cm;">Customer Id</label>
+                                <input type="text" name="custid" required><br><br>
+                                <input type="submit" value="Submit" class="formButton" style="align-items: center;">
+                        </form>
+                </center>
+        </div>
+        </div>
+        <script> type = "text/javascript" >
+                        jQuery(function ($) {
+                                var $inputs = $('input[name=acctid],input[name=custid]');
+                                $inputs.on('input', function () {
+                                        // Set the required property of the other input to false if this input is not empty.
+                                        $inputs.not(this).prop('required', !$(this).val().length);
+                                });
+                        });
+        </script>
+        <br>
+        <br>
+        <br>
+        <br>
 {%endblock content%}

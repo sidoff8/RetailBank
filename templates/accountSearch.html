@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{%block content%}
+<div class="bodyForm">
+  <center>
+    <span>Account Status</span><br><br><br>
+    <table style="width:50%">
+      <tr>
+        <th>Customer Id</th>
+        <th>Account ID</th>
+        <th>Account Type</th>
+        <th>Account Balance</th>
+        <th>Last Updated</th>
+        <th>Operations</th>
+      </tr>
+      {%  for acct_sts in acct_status %}
+      <tr>
+        <th>{{ acct_sts[0] }}</th>
+        <th>{{ acct_sts[1] }}</th>
+        <th>{{ acct_sts[2] }}</th>
+        <th>{{ acct_sts[3] }}</th>
+        <th>{{ acct_sts[5] }}</th>
+        <th><a href="/account_search" onclick="window.location.reload(true);">Refresh</a></th>
+      </tr>
+      {%  endfor %}
+    </table>
+  </center>
+</div>
+<br>
+<br>
+<br>
+<br>
+{%endblock content%}

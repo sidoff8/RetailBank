@@ -328,15 +328,56 @@ def account_status():
         return render_template('account_status.html', username=session['login'], acct_status=acct_sts)
     return redirect(url_for('login'))
 
-@app.route('/customer_search')
+
+@app.route('/customer_search', methods=['GET', 'POST'])
 def customer_search():
     if 'loggedin' in session:
+        if request.method == 'POST':
+            userDetails = request.form
+            cust_ssn_id = userDetails['custssnid']
+            cust_id = userDetails['custid']
+            cur = mysql.connection.cursor()
+            try:
+                if cust_id:
+                    sql_select_query = """select * from Customer where ws_cust_id = %s"""
+                    cur.execute(sql_select_query, (cust_id,))
+                    cust_sts = cur.fetchall()
+                    cur.close()
+                    return render_template('customerSearch.html', username=session['login'], cust_status=cust_sts)
+                else:
+                    sql_select_query = """select * from Customer where ws_ssn = %s"""
+                    cur.execute(sql_select_query, (cust_ssn_id,))
+                    cust_sts = cur.fetchall()
+                    cur.close()
+                    return render_template('customerSearch.html', username=session['login'], cust_status=cust_sts)
+            except Exception as e:
+                return render_template('message.html', username=session['login'], message=e)
         return render_template('customer_search.html', username=session['login'])
     return redirect(url_for('login'))
 
-@app.route('/account_search')
+@app.route('/account_search', methods=['GET', 'POST'])
 def account_search():
     if 'loggedin' in session:
+        if request.method == 'POST':
+            userDetails = request.form
+            acct_id = userDetails['acctid']
+            cust_id = userDetails['custid']
+            cur = mysql.connection.cursor()
+            try:
+                if cust_id:
+                    sql_select_query = """select * from Account where ws_cust_id = %s"""
+                    cur.execute(sql_select_query, (cust_id,))
+                    acct_sts = cur.fetchall()
+                    cur.close()
+                    return render_template('accountSearch.html', username=session['login'], acct_status=acct_sts)
+                else:
+                    sql_select_query = """select * from Account where ws_acct_id = %s"""
+                    cur.execute(sql_select_query, (acct_id,))
+                    acct_sts = cur.fetchall()
+                    cur.close()
+                    return render_template('accountSearch.html', username=session['login'], acct_status=acct_sts)
+            except Exception as e:
+                return render_template('message.html', username=session['login'], message=e)
         return render_template('account_search.html', username=session['login'])
     return redirect(url_for('login'))
 
@@ -358,6 +399,13 @@ def withdraw_amount():
                 new_blc = blc - witd_amt
                 sql_select_query = """update Account set ws_acct_balance =%s where ws_acct_id = %s"""
                 cur.execute(sql_select_query, (new_blc,acct_id,))
+                mysql.connection.commit()
+                now = datetime.now()
+                cust_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
+                date_type = '%d/%m/%Y %H:%i:%s'
+                sql_select_query = """update Account set ws_acct_lasttrdate =STR_TO_DATE(%s,%s) where ws_acct_id = %s"""
+                cur.execute(sql_select_query,
+                            (cust_date, date_type, acct_id,))
                 mysql.connection.commit()
                 cur.close()
                 acct_sts = "Account Balance Withdrawn Successfully"
@@ -399,6 +447,63 @@ def transfer_money():
         return render_template('transfer_money.html', username=session['login'])
     return redirect(url_for('login'))
 
+
+@app.route('/transferMoney', methods=['GET', 'POST'])
+def transferMoney():
+    if 'loggedin' in session:
+        if request.method == 'POST':
+            userDetails = request.form
+            transfer_amt = userDetails['tranferamt']
+            transfer_amt = eval(transfer_amt)
+            src_acct_id = userDetails['srcacctid']
+            trgt_acct_id = userDetails['trgtacctid']
+            cur = mysql.connection.cursor()
+            try:
+                sql_select_query = """select ws_acct_balance from Account where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (src_acct_id,))
+                avail_blc_src = cur.fetchall()
+                blc_src = int(avail_blc_src[0][0])
+                new_blc_src = blc_src - transfer_amt
+                if new_blc_src < 0:
+                    e = 'Transfer Amount is not valid as per Source Account Available Balance'
+                    return render_template('message.html', username=session['login'], message=e)
+                sql_select_query = """select ws_acct_balance from Account where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (trgt_acct_id,))
+                avail_blc_trgt = cur.fetchall()
+                blc_trgt = int(avail_blc_trgt[0][0])
+                new_blc_trgt = blc_trgt + transfer_amt
+                now = datetime.now()
+                cust_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
+                date_type = '%d/%m/%Y %H:%i:%s'
+                sql_select_query = """update Account set ws_acct_balance =%s where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (new_blc_src, src_acct_id,))
+                mysql.connection.commit()
+                sql_select_query = """update Account set ws_acct_lasttrdate =STR_TO_DATE(%s,%s) where ws_acct_id = %s"""
+                cur.execute(sql_select_query,
+                            (cust_date, date_type, src_acct_id,))
+                mysql.connection.commit()
+                sql_select_query = """update Account set ws_acct_balance =%s where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (new_blc_trgt, trgt_acct_id,))
+                mysql.connection.commit()
+                sql_select_query = """update Account set ws_acct_lasttrdate =STR_TO_DATE(%s,%s) where ws_acct_id = %s"""
+                cur.execute(sql_select_query,
+                            (cust_date, date_type, trgt_acct_id,))
+                mysql.connection.commit()
+                sql_select_query = """select ws_acct_balance from Account where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (src_acct_id,))
+                lst_blc_src = cur.fetchall()
+                lst_acct_src = int(lst_blc_src[0][0])
+                sql_select_query = """select ws_acct_balance from Account where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (trgt_acct_id,))
+                lst_blc_trgt = cur.fetchall()
+                lst_acct_trgt = int(lst_blc_trgt[0][0])
+                cur.close()
+                return render_template('transfer_money.html', username=session['login'], scractid=src_acct_id, trgtactid=trgt_acct_id, prvActSrc=blc_src, prvActTrgt=blc_trgt, nxtActSrc=lst_acct_src, nxtActTrgt=lst_acct_trgt)
+            except Exception as e:
+                return render_template('message.html', username=session['login'], message=e)
+        return render_template('transferMoney.html', username=session['login'])
+    return redirect(url_for('login'))
+
 @app.route('/deposit_money', methods=['GET', 'POST'])
 def deposit_money():
     if 'loggedin' in session:
@@ -417,6 +522,13 @@ def deposit_money():
                 sql_select_query = """update Account set ws_acct_balance =%s where ws_acct_id = %s"""
                 cur.execute(sql_select_query, (new_blc, acct_id,))
                 mysql.connection.commit()
+                now = datetime.now()
+                cust_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
+                date_type = '%d/%m/%Y %H:%i:%s'
+                sql_select_query = """update Account set ws_acct_lasttrdate =STR_TO_DATE(%s,%s) where ws_acct_id = %s"""
+                cur.execute(sql_select_query,
+                            (cust_date, date_type, acct_id,))
+                mysql.connection.commit()
                 cur.close()
                 acct_sts = "Account Balance Deposited Successfully"
                 return render_template('message.html', username=session['login'], message=acct_sts)
@@ -424,7 +536,6 @@ def deposit_money():
                 return render_template('message.html', username=session['login'], message=e)
         return render_template('deposit_money.html', username=session['login'])
     return redirect(url_for('login'))
-
 
 @app.route('/depositMoney', methods=['GET', 'POST'])
 def depositAmount():
