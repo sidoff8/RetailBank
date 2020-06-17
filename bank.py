@@ -13,8 +13,8 @@ app.secret_key = 'thisismysecretkey123456789'
 
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'himan'
-app.config['MYSQL_PASSWORD'] = 'himan'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'retailbank'
 
 # Intialize MySQL
@@ -116,10 +116,57 @@ def create_customer_screen():
         return render_template('create_customer_screen.html', username=session['login'])
     return redirect(url_for('login'))
 
-@app.route('/update_customer')
+
+@app.route('/updateCustomer', methods=['GET', 'POST'])
+def updateCustomer():
+    if 'loggedin' in session:  
+        if request.method == 'POST':
+            userDetails = request.form
+            ssn_id = userDetails['ssnid']
+            cust_id = userDetails['custid']
+            cur = mysql.connection.cursor()
+            try:
+                if cust_id:
+                    sql_select_query = """select ws_ssn, ws_cust_id,ws_name,ws_adrs,ws_age from customer where ws_cust_id = %s"""
+                    cur.execute(sql_select_query, (cust_id,))
+                    acct_sts = cur.fetchall()
+                    cur.close()
+                    return render_template('update_customer.html', username=session['login'], acct_status=acct_sts)
+                else:
+                    sql_select_query = """select ws_ssn, ws_cust_id,ws_name,ws_adrs,ws_age from customer where ws_ssn = %s"""
+                    cur.execute(sql_select_query, (ssn_id,))
+                    acct_sts = cur.fetchall()
+                    cur.close()
+                    return render_template('update_customer.html', username=session['login'], acct_status=acct_sts)
+            except Exception as e:
+                return render_template('message.html', username=session['login'], message=e)
+        return render_template('updateCustomer.html', username=session['login'])
+    return redirect(url_for('login'))
+
+
+
+
+@app.route('/update_customer', methods=['GET', 'POST'])
 def update_customer():
     if 'loggedin' in session:
-        return render_template('update_customer.html', username=session['login'])
+        if request.method == 'POST':
+            userDetails = request.form
+            #acct_id = userDetails['acctid']
+            ssn_id = userDetails['SSN_ID']
+            cname=str(userDetails['c_name'])
+            cadd=userDetails['c_add']
+            cage=userDetails['c_age']
+            cur = mysql.connection.cursor()
+            try:
+                sql_select_query = """UPDATE customer SET ws_name = %s , ws_adrs= %s, ws_age=%s where ws_ssn = %s"""
+                cur.execute(sql_select_query, (cname,cadd,cage,ssn_id,))
+                mysql.connection.commit()
+                cur.close()
+                acct_sts = "Customer Updated Successfully"
+                return render_template('message.html', username=session['login'], message=acct_sts)
+            except Exception as e:
+                return render_template('message.html', username=session['login'], message=e)
+        return render_template('customer_update.html', username=session['login'])
     return redirect(url_for('login'))
 
 @app.route('/delete_customer')
