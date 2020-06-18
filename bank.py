@@ -13,8 +13,8 @@ app.secret_key = 'thisismysecretkey123456789'
 
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'himan'
-app.config['MYSQL_PASSWORD'] = 'himan'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'retailbank'
 
 # Intialize MySQL
@@ -250,11 +250,15 @@ def create_account():
             cust_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
             date_type = '%d/%m/%Y %H:%i:%s'
             act_msg = 'Account Created Successfully'
+            trans_id=randint(100000000, 999999999)
+            trans_desc="Deposit"
             try:
                 cur.execute('INSERT INTO Account(ws_cust_id,ws_acct_id, ws_acct_type, ws_acct_balance, ws_acct_crdate, ws_acct_lasttrdate) VALUES(%s,%s, %s, %s, STR_TO_DATE(%s,%s), STR_TO_DATE(%s,%s))',
                             (cust_id, acct_id, acct_type, dpst_amt, cust_date, date_type, act_date, date_type))
                 cur.execute('UPDATE AccountStatus SET ws_acct_id = %s, ws_acct_type = %s, ws_status = %s , ws_msg =  %s, ws_lastupdate = STR_TO_DATE(%s,%s) WHERE ws_cust_id = %s',
                             (acct_id, acct_type, act_status, act_msg, cust_date, date_type, cust_id))
+                cur.execute('INSERT INTO Transactions(ws_cust_id,ws_accnt_type,ws_amt, ws_trxn_date,ws_src_typ,ws_tgt_typ,ws_trxn_id,ws_description) VALUES(%s,%s, %s, STR_TO_DATE(%s,%s),%s,%s,%s,%s)',
+                            (cust_id, acct_type, dpst_amt, act_date , date_type, acct_type, acct_type,trans_id,trans_desc))
                 mysql.connection.commit()
                 cur.close()
                 message = "Customer Account Created successfully"
@@ -407,6 +411,19 @@ def withdraw_amount():
                 cur.execute(sql_select_query,
                             (cust_date, date_type, acct_id,))
                 mysql.connection.commit()
+                #Transaction Statement
+                sql_select_query = """select ws_cust_id,ws_acct_type from Account where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (acct_id,))
+                account =cur.fetchall()
+                cust_id = int(account[0][0])
+                acct_type=account[0][1]
+                trans_id=randint(100000000, 999999999)
+                trans_desc="Withdraw"
+                act_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
+                date_type = '%d/%m/%Y %H:%i:%s'
+                cur.execute('INSERT INTO Transactions(ws_cust_id,ws_accnt_type,ws_amt, ws_trxn_date,ws_src_typ,ws_tgt_typ,ws_trxn_id,ws_description) VALUES(%s,%s, %s, STR_TO_DATE(%s,%s),%s,%s,%s,%s)',
+                            (cust_id, acct_type, witd_amt, act_date , date_type, acct_type, acct_type,trans_id,trans_desc))
+                mysql.connection.commit()
                 cur.close()
                 acct_sts = "Account Balance Withdrawn Successfully"
                 return render_template('message.html', username=session['login'], message=acct_sts)
@@ -478,6 +495,36 @@ def transferMoney():
                 sql_select_query = """update Account set ws_acct_balance =%s where ws_acct_id = %s"""
                 cur.execute(sql_select_query, (new_blc_src, src_acct_id,))
                 mysql.connection.commit()
+                #Target Transtion Statement
+                sql_select_query = """select ws_cust_id,ws_acct_type from Account where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (trgt_acct_id,))
+                account =cur.fetchall()
+                cust_id = int(account[0][0])
+                tar_acct_type=account[0][1]
+                sql_select_query = """select ws_acct_type from Account where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (src_acct_id,))
+                account =cur.fetchall()
+                src_acct_type=account[0][0]
+                trans_id=randint(100000000, 999999999)
+                trans_desc="Deposit"
+                act_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
+                date_type = '%d/%m/%Y %H:%i:%s'
+                cur.execute('INSERT INTO Transactions(ws_cust_id,ws_accnt_type,ws_amt, ws_trxn_date,ws_src_typ,ws_tgt_typ,ws_trxn_id,ws_description) VALUES(%s,%s, %s, STR_TO_DATE(%s,%s),%s,%s,%s,%s)',
+                            (cust_id, tar_acct_type, transfer_amt, act_date , date_type, src_acct_type, tar_acct_type,trans_id,trans_desc))
+                mysql.connection.commit()
+                #source Transtion Statement
+                sql_select_query = """select ws_cust_id,ws_acct_type from Account where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (src_acct_id,))
+                account =cur.fetchall()
+                cust_id = int(account[0][0])
+                src_acct_type=account[0][1]
+                trans_id=randint(100000000, 999999999)
+                trans_desc="Withdraw"
+                act_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
+                date_type = '%d/%m/%Y %H:%i:%s'
+                cur.execute('INSERT INTO Transactions(ws_cust_id,ws_accnt_type,ws_amt, ws_trxn_date,ws_src_typ,ws_tgt_typ,ws_trxn_id,ws_description) VALUES(%s,%s, %s, STR_TO_DATE(%s,%s),%s,%s,%s,%s)',
+                            (cust_id, src_acct_type, transfer_amt, act_date , date_type, src_acct_type, tar_acct_type,trans_id,trans_desc))
+                mysql.connection.commit()
                 sql_select_query = """update Account set ws_acct_lasttrdate =STR_TO_DATE(%s,%s) where ws_acct_id = %s"""
                 cur.execute(sql_select_query,
                             (cust_date, date_type, src_acct_id,))
@@ -529,6 +576,19 @@ def deposit_money():
                 cur.execute(sql_select_query,
                             (cust_date, date_type, acct_id,))
                 mysql.connection.commit()
+                #transaction Statement
+                sql_select_query = """select ws_cust_id,ws_acct_type from Account where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (acct_id,))
+                account =cur.fetchall()
+                cust_id = int(account[0][0])
+                acct_type=account[0][1]
+                trans_id=randint(100000000, 999999999)
+                trans_desc="Deposit"
+                act_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
+                date_type = '%d/%m/%Y %H:%i:%s'
+                cur.execute('INSERT INTO Transactions(ws_cust_id,ws_accnt_type,ws_amt, ws_trxn_date,ws_src_typ,ws_tgt_typ,ws_trxn_id,ws_description) VALUES(%s,%s, %s, STR_TO_DATE(%s,%s),%s,%s,%s,%s)',
+                            (cust_id, acct_type, dpst_amt, act_date , date_type, acct_type, acct_type,trans_id,trans_desc))
+                mysql.connection.commit()
                 cur.close()
                 acct_sts = "Account Balance Deposited Successfully"
                 return render_template('message.html', username=session['login'], message=acct_sts)
@@ -563,7 +623,13 @@ def depositAmount():
         return render_template('depositMoney.html', username=session['login'])
     return redirect(url_for('login'))
 
-@app.route('/account_statement')
+@app.route('/accountStatement', methods=['GET', 'POST'])
+def accountStatement():
+    if 'loggedin' in session:
+        return render_template('accountStatement.html', username=session['login'])
+    return redirect(url_for('login'))
+        
+@app.route('/account_statement', methods=['GET', 'POST'])
 def account_statement():
     if 'loggedin' in session:
         return render_template('account_statement.html', username=session['login'])

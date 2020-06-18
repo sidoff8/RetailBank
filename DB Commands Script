@@ -25,12 +25,14 @@ FOREIGN KEY (ws_cust_id) REFERENCES Customer(ws_cust_id));
 
 DROP TABLE IF EXISTS Transactions;
 CREATE TABLE Transactions
-(ws_cust_id INT(9) NOT NULL PRIMARY KEY,
+(ws_cust_id INT(9) NOT NULL,
 ws_accnt_type char(1) NOT NULL,
 ws_amt DECIMAL(13,2) NOT NULL,
 ws_trxn_date date NOT NULL,
 ws_src_typ char(1),
 ws_tgt_typ char(1),
+ws_trxn_id INT(9) NOT NULL,
+ws_description TEXT(10) NOT NULL,
 FOREIGN KEY (ws_cust_id) REFERENCES Customer(ws_cust_id));
 
 DROP TABLE IF EXISTS userstore;
