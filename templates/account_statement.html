@@ -4,7 +4,7 @@
 <div class="bodyForm">
     <center>
       <span>Customer Status</span><br><br><br>
-      <table style="width:50%">
+      <table style="width:50%" id="tblData" >
         <tr>
             <th>Transaction Id</th>
             <th>Description</th>
@@ -22,10 +22,70 @@
           </tr>
           {%  endfor %}
       </table>
+      <form style="margin-top: .8cm;">
+        <input type="button" id="btnExportPDF" value="Download as PDF" onclick="Export()" class="formButton" style="align-items: center;"/>
+        <input type="button" id="btnExportCSV" value="Download as EXCEL" onclick="fnExcelReport()" class="formButton" style="align-items: center;"/>
+      </form>
     </center>
   </div>
-  <br>
-  <br>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    
+    <script type="text/javascript">
+      
+	      ///////////////	 EXPORT TO PDF		/////////////////////////
+        function Export() {
+            html2canvas(document.getElementsByTagName('table'), {
+                onrendered: function (canvas) {
+                    var data = canvas.toDataURL();
+                    var docDefinition = {
+                        content: [{
+                            image: data,
+                            width: 500
+                        }]
+                    };
+                    pdfMake.createPdf(docDefinition).download("Export_PDF.pdf");
+                }
+            });
+        }
+		
+          
+        ////////////	EXPORT TO CSV			/////////////////////
+        function fnExcelReport()
+        {
+            var tab_text="<table border='2px'><tr bgcolor='#87AFC6'>";
+            var textRange; var j=0;
+            tab = document.getElementById('tblData'); // id of table
+        
+            for(j = 0 ; j < tab.rows.length ; j++) 
+            {     
+                tab_text=tab_text+tab.rows[j].innerHTML+"</tr>";
+                //tab_text=tab_text+"</tr>";
+            }
+        
+            tab_text=tab_text+"</table>";
+            tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+            tab_text= tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
+            tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+        
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf("MSIE "); 
+        
+            if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+            {
+                txtArea1.document.open("txt/html","replace");
+                txtArea1.document.write(tab_text);
+                txtArea1.document.close();
+                txtArea1.focus(); 
+                sa=txtArea1.document.execCommand("SaveAs",true,"Export_EXCEL.xls");
+            }  
+            else                 
+                sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));  
+        
+            return (sa);
+        }
+    </script>
   <br>
   <br>
   
