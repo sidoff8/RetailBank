@@ -5,7 +5,6 @@ import re
 from datetime import datetime
 from random import randint
 
-
 app=Flask(__name__)
 
 # Secret key (can be anything, it's for extra protection)
@@ -13,8 +12,8 @@ app.secret_key = 'thisismysecretkey123456789'
 
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_USER'] = 'himan'
+app.config['MYSQL_PASSWORD'] = 'himan'
 app.config['MYSQL_DB'] = 'retailbank'
 
 # Intialize MySQL
@@ -77,9 +76,6 @@ def home():
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 
-
-
-
 @app.route('/create_customer_screen', methods=['GET', 'POST'])
 def create_customer_screen():
     if 'loggedin' in session:
@@ -116,7 +112,6 @@ def create_customer_screen():
         return render_template('create_customer_screen.html', username=session['login'])
     return redirect(url_for('login'))
 
-
 @app.route('/updateCustomer', methods=['GET', 'POST'])
 def updateCustomer():
     if 'loggedin' in session:  
@@ -143,9 +138,6 @@ def updateCustomer():
         return render_template('updateCustomer.html', username=session['login'])
     return redirect(url_for('login'))
 
-
-
-
 @app.route('/update_customer', methods=['GET', 'POST'])
 def update_customer():
     if 'loggedin' in session:
@@ -169,7 +161,6 @@ def update_customer():
         return render_template('customer_update.html', username=session['login'])
     return redirect(url_for('login'))
 
-
 @app.route('/delete_customer', methods=['GET', 'POST'])
 def delete_customer():
     if 'loggedin' in session:
@@ -191,7 +182,6 @@ def delete_customer():
                 return render_template('message.html', username=session['login'], message=e)
         return render_template('delete_customer.html', username=session['login'])
     return redirect(url_for('login'))
-
 
 @app.route('/deleteCustomer', methods=['GET', 'POST'])
 def deleteCustomer():
@@ -233,7 +223,6 @@ def customer_status():
         return render_template('customer_status.html', username=session['login'], cust_status=cust_sts)
     return redirect(url_for('login'))
 
-
 @app.route('/create_account', methods=['GET', 'POST'])
 def create_account():
     if 'loggedin' in session:
@@ -252,13 +241,14 @@ def create_account():
             act_msg = 'Account Created Successfully'
             trans_id=randint(100000000, 999999999)
             trans_desc="Deposit"
+            trans_type = 'Credit'
             try:
                 cur.execute('INSERT INTO Account(ws_cust_id,ws_acct_id, ws_acct_type, ws_acct_balance, ws_acct_crdate, ws_acct_lasttrdate) VALUES(%s,%s, %s, %s, STR_TO_DATE(%s,%s), STR_TO_DATE(%s,%s))',
                             (cust_id, acct_id, acct_type, dpst_amt, cust_date, date_type, act_date, date_type))
                 cur.execute('UPDATE AccountStatus SET ws_acct_id = %s, ws_acct_type = %s, ws_status = %s , ws_msg =  %s, ws_lastupdate = STR_TO_DATE(%s,%s) WHERE ws_cust_id = %s',
                             (acct_id, acct_type, act_status, act_msg, cust_date, date_type, cust_id))
-                cur.execute('INSERT INTO Transactions(ws_cust_id,ws_accnt_type,ws_amt, ws_trxn_date,ws_src_typ,ws_tgt_typ,ws_trxn_id,ws_description) VALUES(%s,%s, %s, STR_TO_DATE(%s,%s),%s,%s,%s,%s)',
-                            (cust_id, acct_type, dpst_amt, act_date , date_type, acct_type, acct_type,trans_id,trans_desc))
+                cur.execute('INSERT INTO Transactions(ws_cust_id,ws_accnt_type,ws_amt, ws_trxn_date,ws_src_typ,ws_tgt_typ,ws_trxn_id,ws_description, ws_type) VALUES(%s,%s, %s, STR_TO_DATE(%s,%s),%s,%s,%s,%s,%s)',
+                            (cust_id, acct_type, dpst_amt, act_date , date_type, acct_type, acct_type,trans_id,trans_desc, trans_type))
                 mysql.connection.commit()
                 cur.close()
                 message = "Customer Account Created successfully"
@@ -290,7 +280,6 @@ def delete_account():
                 return render_template('message.html', username=session['login'], message=e)
         return render_template('delete_account.html', username=session['login'])
     return redirect(url_for('login'))
-
 
 @app.route('/deleteAccount', methods=['GET', 'POST'])
 def deleteAccount():
@@ -331,7 +320,6 @@ def account_status():
             return render_template('message.html', username=session['login'], message=e)
         return render_template('account_status.html', username=session['login'], acct_status=acct_sts)
     return redirect(url_for('login'))
-
 
 @app.route('/customer_search', methods=['GET', 'POST'])
 def customer_search():
@@ -385,7 +373,6 @@ def account_search():
         return render_template('account_search.html', username=session['login'])
     return redirect(url_for('login'))
 
-
 @app.route('/withdraw_amount', methods=['GET', 'POST'])
 def withdraw_amount():
     if 'loggedin' in session:
@@ -419,10 +406,11 @@ def withdraw_amount():
                 acct_type=account[0][1]
                 trans_id=randint(100000000, 999999999)
                 trans_desc="Withdraw"
+                trans_type = 'Debit'
                 act_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
                 date_type = '%d/%m/%Y %H:%i:%s'
-                cur.execute('INSERT INTO Transactions(ws_cust_id,ws_accnt_type,ws_amt, ws_trxn_date,ws_src_typ,ws_tgt_typ,ws_trxn_id,ws_description) VALUES(%s,%s, %s, STR_TO_DATE(%s,%s),%s,%s,%s,%s)',
-                            (cust_id, acct_type, witd_amt, act_date , date_type, acct_type, acct_type,trans_id,trans_desc))
+                cur.execute('INSERT INTO Transactions(ws_cust_id,ws_accnt_type,ws_amt, ws_trxn_date,ws_src_typ,ws_tgt_typ,ws_trxn_id,ws_description, ws_type) VALUES(%s,%s, %s, STR_TO_DATE(%s,%s),%s,%s,%s,%s,%s)',
+                            (cust_id, acct_type, witd_amt, act_date , date_type, acct_type, acct_type,trans_id,trans_desc, trans_type))
                 mysql.connection.commit()
                 cur.close()
                 acct_sts = "Account Balance Withdrawn Successfully"
@@ -464,7 +452,6 @@ def transfer_money():
         return render_template('transfer_money.html', username=session['login'])
     return redirect(url_for('login'))
 
-
 @app.route('/transferMoney', methods=['GET', 'POST'])
 def transferMoney():
     if 'loggedin' in session:
@@ -496,34 +483,46 @@ def transferMoney():
                 cur.execute(sql_select_query, (new_blc_src, src_acct_id,))
                 mysql.connection.commit()
                 #Target Transtion Statement
-                sql_select_query = """select ws_cust_id,ws_acct_type from Account where ws_acct_id = %s"""
+                sql_select_query = """select ws_cust_id from Account where ws_acct_id = %s"""
                 cur.execute(sql_select_query, (trgt_acct_id,))
                 account =cur.fetchall()
                 cust_id = int(account[0][0])
-                tar_acct_type=account[0][1]
+                sql_select_query = """select ws_acct_type from Account where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (trgt_acct_id,))
+                account = cur.fetchall()
+                tar_acct_type=str(account[0][0])
                 sql_select_query = """select ws_acct_type from Account where ws_acct_id = %s"""
                 cur.execute(sql_select_query, (src_acct_id,))
                 account =cur.fetchall()
-                src_acct_type=account[0][0]
+                src_acct_type=str(account[0][0])
                 trans_id=randint(100000000, 999999999)
                 trans_desc="Deposit"
+                trans_type = 'Credit'
                 act_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
                 date_type = '%d/%m/%Y %H:%i:%s'
-                cur.execute('INSERT INTO Transactions(ws_cust_id,ws_accnt_type,ws_amt, ws_trxn_date,ws_src_typ,ws_tgt_typ,ws_trxn_id,ws_description) VALUES(%s,%s, %s, STR_TO_DATE(%s,%s),%s,%s,%s,%s)',
-                            (cust_id, tar_acct_type, transfer_amt, act_date , date_type, src_acct_type, tar_acct_type,trans_id,trans_desc))
+                cur.execute('INSERT INTO Transactions(ws_cust_id,ws_accnt_type,ws_amt, ws_trxn_date,ws_src_typ,ws_tgt_typ,ws_trxn_id,ws_description,ws_type) VALUES(%s,%s, %s, STR_TO_DATE(%s,%s),%s,%s,%s,%s,%s)',
+                            (cust_id, tar_acct_type, transfer_amt, act_date , date_type, src_acct_type, tar_acct_type,trans_id,trans_desc,trans_type))
                 mysql.connection.commit()
                 #source Transtion Statement
-                sql_select_query = """select ws_cust_id,ws_acct_type from Account where ws_acct_id = %s"""
+                sql_select_query = """select ws_cust_id from Account where ws_acct_id = %s"""
                 cur.execute(sql_select_query, (src_acct_id,))
                 account =cur.fetchall()
                 cust_id = int(account[0][0])
-                src_acct_type=account[0][1]
+                sql_select_query = """select ws_acct_type from Account where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (src_acct_id,))
+                account = cur.fetchall()
+                src_acct_type=str(account[0][0])
+                sql_select_query = """select ws_acct_type from Account where ws_acct_id = %s"""
+                cur.execute(sql_select_query, (trgt_acct_id,))
+                account = cur.fetchall()
+                tar_acct_type = str(account[0][0])
                 trans_id=randint(100000000, 999999999)
                 trans_desc="Withdraw"
+                trans_type = 'Debit'
                 act_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
                 date_type = '%d/%m/%Y %H:%i:%s'
-                cur.execute('INSERT INTO Transactions(ws_cust_id,ws_accnt_type,ws_amt, ws_trxn_date,ws_src_typ,ws_tgt_typ,ws_trxn_id,ws_description) VALUES(%s,%s, %s, STR_TO_DATE(%s,%s),%s,%s,%s,%s)',
-                            (cust_id, src_acct_type, transfer_amt, act_date , date_type, src_acct_type, tar_acct_type,trans_id,trans_desc))
+                cur.execute('INSERT INTO Transactions(ws_cust_id,ws_accnt_type,ws_amt, ws_trxn_date,ws_src_typ,ws_tgt_typ,ws_trxn_id,ws_description,ws_type) VALUES(%s,%s, %s, STR_TO_DATE(%s,%s),%s,%s,%s,%s,%s)',
+                            (cust_id, src_acct_type, transfer_amt, act_date , date_type, src_acct_type, tar_acct_type,trans_id,trans_desc,trans_type))
                 mysql.connection.commit()
                 sql_select_query = """update Account set ws_acct_lasttrdate =STR_TO_DATE(%s,%s) where ws_acct_id = %s"""
                 cur.execute(sql_select_query,
@@ -584,10 +583,11 @@ def deposit_money():
                 acct_type=account[0][1]
                 trans_id=randint(100000000, 999999999)
                 trans_desc="Deposit"
+                trans_type = 'Credit'
                 act_date = (now.strftime("%d/%m/%Y %H:%M:%S"))
                 date_type = '%d/%m/%Y %H:%i:%s'
-                cur.execute('INSERT INTO Transactions(ws_cust_id,ws_accnt_type,ws_amt, ws_trxn_date,ws_src_typ,ws_tgt_typ,ws_trxn_id,ws_description) VALUES(%s,%s, %s, STR_TO_DATE(%s,%s),%s,%s,%s,%s)',
-                            (cust_id, acct_type, dpst_amt, act_date , date_type, acct_type, acct_type,trans_id,trans_desc))
+                cur.execute('INSERT INTO Transactions(ws_cust_id,ws_accnt_type,ws_amt, ws_trxn_date,ws_src_typ,ws_tgt_typ,ws_trxn_id,ws_description,ws_type) VALUES(%s,%s, %s, STR_TO_DATE(%s,%s),%s,%s,%s,%s,%s)',
+                            (cust_id, acct_type, dpst_amt, act_date , date_type, acct_type, acct_type,trans_id,trans_desc,trans_type))
                 mysql.connection.commit()
                 cur.close()
                 acct_sts = "Account Balance Deposited Successfully"
@@ -626,15 +626,32 @@ def depositAmount():
 @app.route('/accountStatement', methods=['GET', 'POST'])
 def accountStatement():
     if 'loggedin' in session:
+        if request.method == 'POST':
+            userDetails = request.form
+            acct_id = userDetails['accountid']
+            trnx_no = userDetails['transactions']
+            trnx_no = eval(trnx_no)
+            cur = mysql.connection.cursor()
+            try:
+                select = "select ws_cust_id from Account where ws_acct_id = %s"
+                cur.execute(select, (acct_id,))
+                cust_id = cur.fetchall()
+                custId = int(cust_id[0][0])
+                sql_select_query = """select ws_trxn_id,ws_description,ws_type,ws_trxn_date, ws_amt from Transactions where ws_cust_id = %s LIMIT %s"""
+                cur.execute(sql_select_query, (custId,trnx_no,))
+                acct_sts = cur.fetchall()
+                cur.close()
+                return render_template('account_statement.html', username=session['login'], acct_status=acct_sts)
+            except Exception as e:
+                return render_template('message.html', username=session['login'], message=e)
         return render_template('accountStatement.html', username=session['login'])
     return redirect(url_for('login'))
         
-@app.route('/account_statement', methods=['GET', 'POST'])
+@app.route('/account_statement')
 def account_statement():
     if 'loggedin' in session:
         return render_template('account_statement.html', username=session['login'])
     return redirect(url_for('login'))
-
 
 @app.route('/create_customer_screen/success')
 def success_message():

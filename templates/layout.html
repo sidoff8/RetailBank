@@ -2,7 +2,7 @@
 <html>
     <head>
      
-     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <style>
 
 * {
@@ -169,6 +169,42 @@ li a, .dropbtn {
 .dropdown:hover .dropdown-content {
   display: block;
 }
+
+/* for social links */
+.fa {
+  padding: 20px;
+  font-size: 20px;
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  text-decoration: none;
+  margin: 5px 2px;
+  border-radius: 50%;
+}
+
+.fa:hover {
+    opacity: 0.7;
+}
+
+.fa-facebook {
+  background: #000000;
+  color: white;
+}
+
+.fa-twitter {
+  background: #000000;
+  color: white;
+}
+
+.fa-google {
+  background: #000000;
+  color: white;
+}
+
+.fa-linkedin {
+  background: #000000;
+  color: white;
+}
         </style>
 
 
@@ -250,7 +286,7 @@ function print_city(city_id, city_index){
             <li class="dropdown">
                 <a href="" class="dropbtn">Customer Management</a>
                 <div class="dropdown-content">
-                  <a href="/create_customer_screen">Create Customer Screen</a>
+                  <a href="/create_customer_screen">Create Customer</a>
                   <a href="/updateCustomer">Update Customer</a>
                   <a href="/deleteCustomer">Delete Customer</a>
                 </div>
@@ -320,5 +356,19 @@ function print_city(city_id, city_index){
           </div>
           
 
+          <!-- for social distancing -->
+          <div style="height: 3cm; background-color: #222831;">
+            <div>
+              <div style="height: .5cm;"></div>
+              <span style="margin-left: 4.5cm;">Copyright @ All right reserved by <span
+                  style="color: #fbd46d; font-weight: bold;">FedChoice Bank</span></span>
+              <span style="margin-right: 4.5cm;">
+                <a href="#" class="fa fa-facebook" style="float: right;"></a>
+                <a href="#" class="fa fa-twitter" style="float: right;"></a>
+                <a href="#" class="fa fa-google" style="float: right;"></a>
+                <a href="#" class="fa fa-linkedin" style="float: right;"></a>
+              </span>
+            </div>
+          </div style="height: 3cm;">
 </body>
 </html>

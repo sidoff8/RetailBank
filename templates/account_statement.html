@@ -8,15 +8,17 @@
         <tr>
             <th>Transaction Id</th>
             <th>Description</th>
+            <th>Transaction Type</th>
             <th>Date</th>
             <th>Amount</th>
           </tr>
-          {%  for cust_sts in acct_statement %}
+          {%  for acct_sts in acct_status %}
           <tr>
-              <th>{{ cust_sts[0] }}</th>
-              <th>{{ cust_sts[1] }}</th>
-              <th>{{ cust_sts[2] }}</th>
-              <th>{{ cust_sts[3] }}</th>
+              <th>{{ acct_sts[0] }}</th>
+              <th>{{ acct_sts[1] }}</th>
+              <th>{{ acct_sts[2] }}</th>
+              <th>{{ acct_sts[3] }}</th>
+              <th>{{ acct_sts[4] }}</th>
           </tr>
           {%  endfor %}
       </table>
