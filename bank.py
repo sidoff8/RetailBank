@@ -12,8 +12,8 @@ app.secret_key = 'thisismysecretkey123456789'
 
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'himan'
-app.config['MYSQL_PASSWORD'] = 'himan'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'retailbank'
 
 # Intialize MySQL
