@@ -6,12 +6,19 @@
             <form action="/accountStatement" method="POST" style="margin-top: .8cm;">
                 <label for="accountid" style="margin-right:4cm;">Account ID</label>
                 <input type="text" id="accountid" name="accountid"><br><br><br>
-                <div class="C selectt"> 
-                    <label style="margin-right: 5cm;" for="transactions">Number of Transactions: </label>
-                    <input type="Number" id="transactions" name="transactions">
+                <div> 
+                    <div id="byTran"><label style="margin-right: 5cm;"><input type="radio" name="colorRadio" value="C" onclick="DisplayTran()">Last Number of Transactions</label></div><br><br>
+                    <div id="byDate"><label style="margin-right: 7.5cm;"><input type="radio" name="colorRadio" value="Cplus" onclick="DisplayDate()"> Start-End Dates</label> </div><br><br>
                 </div> 
-                <br>
-            <br>
+        
+                <div class="C selectt" id="inputTran"> 
+                    <label style="margin-right: 5cm;" for="transactions">Number of Transactions: </label>
+                    <input type="Number" id="transactions" name="transactions" min="1" max="10">
+                </div> 
+                <div class="Cplus selectt" id="inputDate"> 
+                    Start Date: <input type="date" id="start" name="trip-start">
+                    End Date: <input type="date" id="start" name="trip-start">
+                </div> 
                 <input type="submit" value="Submit" class="formButton" style="margin-right: 8cm; margin-top: .5cm;">
             </form>
             <br>
@@ -20,4 +27,18 @@
             <br>
         </center>
         </div>
+        <script>
+            document.getElementById("inputTran").style.display = "none";
+            document.getElementById("inputDate").style.display = "none";
+    
+            function DisplayTran(){
+                document.getElementById("inputDate").style.display = "none";
+                document.getElementById("inputTran").style.display = "block";
+            }
+    
+            function DisplayDate(){
+                document.getElementById("inputTran").style.display = "none";
+                document.getElementById("inputDate").style.display = "block";
+            }
+        </script>
 {%endblock content%}

@@ -5,7 +5,7 @@
     	<span>Create Customer</span><br><br><br>
         <form method="POST" action="/create_customer_screen" style="margin-top: .8cm;">
   			<label for="ssnid" style="margin-right:4cm;">Customer SSN Id<span style="color: red;font-size: .5cm;">*</span></label>
-  			<input type="text" id="fname" name="ssnid" required><br><br>
+  			<input type="text" id="fname" name="ssnid" pattern=".{9}" required><br><br>
   			<label for="custname" style="margin-right:4.3cm;">Customer Name<span style="color: red;font-size: .5cm;">*</span></label>
   			<input type="text" id="lname" name="custname" required><br><br>
             <label for="age" style="margin-right:6.6cm;">Age<span style="color: red;font-size: .5cm;">*</span></label>
