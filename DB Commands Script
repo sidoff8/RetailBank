@@ -33,7 +33,7 @@ ws_src_typ char(1),
 ws_tgt_typ char(1),
 ws_trxn_id INT(9) NOT NULL,
 ws_description TEXT(10) NOT NULL,
-ws_type char(5) NOT NULL,
+ws_type char(6) NOT NULL,
 FOREIGN KEY (ws_cust_id) REFERENCES Customer(ws_cust_id));
 
 DROP TABLE IF EXISTS userstore;
